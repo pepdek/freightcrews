@@ -154,3 +154,11 @@
   .check { display: flex; align-items: center; gap: 12px; min-height: 32px; font-size: 0.9375rem; cursor: pointer; }
   .check input { width: 20px; height: 20px; flex: none; accent-color: var(--ink); }
 }
+
+@layer components {
+  .section-head { margin-bottom: clamp(40px, 5vw, 64px); }
+  .section-head h2 { max-width: 15em; }
+  .section-foot { margin-top: 40px; }
+  /* A smaller H2 for list headings that repeat down a page. */
+  h2.h2-sm { font-size: 2rem; line-height: 1.12; }
+}

@@ -1,0 +1,48 @@
+---
+import Check from "@lucide/astro/icons/check";
+import Base from "../layouts/Base.astro";
+import Card from "../components/Card.astro";
+import PageHead from "../components/PageHead.astro";
+import TeardownForm from "../components/TeardownForm.astro";
+import { SITE } from "../config";
+
+const gets = ["The one task to automate first", "A rough hours-back estimate", "Three written recommendations the same day", "An honest answer on whether this fits your desk."];
+---
+
+<Base title="Book a free teardown — FreightCrews" description="Book a free 20-minute workflow teardown. You get three written recommendations the same day.">
+  <PageHead title="The free teardown." italic="20 minutes." />
+  <section class="section">
+    <div class="container-x grid-12">
+      <ul class="gets">
+        {gets.map((g) => <li><Check size={20} stroke-width={1.5} aria-hidden="true" /><span>{g}</span></li>)}
+      </ul>
+      <div class="book">
+        {SITE.BOOKING_URL ? (
+          <>
+            <iframe src={SITE.BOOKING_URL} title="Book a teardown" loading="lazy"></iframe>
+            <details>
+              <summary class="link">Prefer a form?</summary>
+              <Card class="reveal-form"><TeardownForm /></Card>
+            </details>
+          </>
+        ) : (
+          <Card><TeardownForm /></Card>
+        )}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .gets { align-self: start; border-top: 1px solid var(--line); }
+  .gets li { display: flex; gap: 14px; padding-block: 18px; border-bottom: 1px solid var(--line); }
+  .gets :global(svg) { flex: none; margin-top: 3px; }
+  iframe { width: 100%; height: 720px; border: 1px solid var(--line); border-radius: 10px; }
+  summary { margin-top: 24px; cursor: pointer; width: fit-content; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  .book :global(.reveal-form) { margin-top: 24px; }
+  @media (min-width: 900px) {
+    .gets { grid-column: 1 / span 4; position: sticky; top: 96px; }
+    .book { grid-column: 6 / span 7; }
+  }
+</style>

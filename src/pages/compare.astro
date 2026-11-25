@@ -1,0 +1,19 @@
+---
+import Base from "../layouts/Base.astro";
+import CompareTable from "../components/CompareTable.astro";
+import PageHead from "../components/PageHead.astro";
+import { COMPARE_FULL } from "../data/compare";
+---
+
+<Base
+  title="Compare your options — FreightCrews"
+  description="FreightCrews, a managed ops service, an enterprise AI platform or another rep: how each helps a small brokerage with desk work."
+>
+  <PageHead title="Rent a crew, or" italic="own one." lead="Four ways a small brokerage can get help with desk work. Here’s how they differ, using what each option typically offers." />
+  <section class="section">
+    <div class="container-x">
+      <CompareTable {...COMPARE_FULL} full caption="Four ways a small brokerage can get help with desk work" />
+      <p class="section-foot small muted">No company is named here on purpose. Every business is different; ask any provider for their terms in writing.</p>
+    </div>
+  </section>
+</Base>

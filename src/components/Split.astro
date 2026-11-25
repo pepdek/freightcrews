@@ -1,0 +1,34 @@
+---
+import Eyebrow from "./Eyebrow.astro";
+
+interface Props {
+  title: string;
+  italic?: string;
+  eyebrow?: string;
+  after?: string;
+  id?: string;
+  class?: string;
+}
+const { title, italic, eyebrow, after, id, class: extra } = Astro.props;
+---
+
+{/* Heading on the left, content on the right: the site's basic editorial row. */}
+<section id={id} class:list={["section", extra]}>
+  <div class="container-x grid-12">
+    <div class="side">
+      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+      <h2>{title}{italic && <>{" "}<em>{italic}</em></>}{after && ` ${after}`}</h2>
+      <slot name="side" />
+    </div>
+    <div class="body"><slot /></div>
+  </div>
+</section>
+
+<style>
+  .grid-12 > div { min-width: 0; }
+  h2 { max-width: 14em; }
+  @media (min-width: 900px) {
+    .side { grid-column: 1 / span 5; padding-right: 24px; }
+    .body { grid-column: 6 / span 7; }
+  }
+</style>

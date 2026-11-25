@@ -1,0 +1,23 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import Rows from "../components/Rows.astro";
+import { SITE } from "../config";
+
+const updated = new Date().toLocaleDateString("en-US", { dateStyle: "long", timeZone: "America/Los_Angeles" });
+const items = [
+  { title: "What the forms collect", text: "The forms collect your name, company, role, email, phone, business type, team size, systems and message. They also record the page you sent the form from, and whether you asked for the weekly email. Only the fields you fill in are collected." },
+  { title: "Why", text: "To reply to you, and to send the weekly email if you opted in." },
+  { title: "Where it’s stored", text: "In Netlify form submissions and the founder’s inbox." },
+  { title: "No selling", text: "Your data is not sold." },
+  ...(SITE.PLAUSIBLE_DOMAIN ? [{ title: "Analytics", text: "This site counts visits with Plausible Analytics." }] : []),
+  ...(SITE.EMAIL ? [{ title: "Deletion", text: `To ask for your data to be deleted, email ${SITE.EMAIL}.` }] : []),
+];
+---
+
+<Base title="Privacy — FreightCrews" description="What the FreightCrews forms collect, why, and where it is stored.">
+  <PageHead title="Privacy">
+    <p class="lead small">Last updated: {updated}</p>
+  </PageHead>
+  <section class="section"><div class="container-x"><Rows items={items} /></div></section>
+</Base>

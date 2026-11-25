@@ -1,0 +1,25 @@
+---
+interface Props {
+  items: { title: string; text: string }[];
+}
+const { items } = Astro.props;
+---
+
+{/* Titled paragraphs: security, privacy and terms. */}
+<div class="rows">
+  {items.map(({ title, text }) => (
+    <div class="row grid-12">
+      <h2 class="h2-sm">{title}</h2>
+      <p>{text}</p>
+    </div>
+  ))}
+</div>
+
+<style>
+  .row { padding-block: 32px; border-bottom: 1px solid var(--line); row-gap: 12px; }
+  .row:first-child { padding-top: 0; }
+  @media (min-width: 900px) {
+    h2 { grid-column: 1 / span 5; }
+    p { grid-column: 6 / span 7; padding-top: 4px; }
+  }
+</style>

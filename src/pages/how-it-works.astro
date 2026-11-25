@@ -1,0 +1,83 @@
+---
+import Check from "@lucide/astro/icons/check";
+import Eye from "@lucide/astro/icons/eye";
+import File from "@lucide/astro/icons/file";
+import Key from "@lucide/astro/icons/key";
+import Base from "../layouts/Base.astro";
+import CTABand from "../components/CTABand.astro";
+import FAQ from "../components/FAQ.astro";
+import PageHead from "../components/PageHead.astro";
+import Split from "../components/Split.astro";
+import { faq, faqSchema } from "../data/faq";
+
+const days = [
+  ["0", "We sign a one-page scope with the acceptance test, e.g. “extracts 20 of 20 sample rate cons correctly.”"],
+  ["1", "Kickoff. I record your rep doing the job and collect 20 real examples."],
+  ["2–3", "Your Claude workspace is set up in your company’s name. Email and one system connected."],
+  ["4–7", "I build the agent and test it on your 20 examples."],
+  ["8–10", "Shadow mode. The agent drafts, your rep approves every item."],
+  ["11–13", "I fix what failed and write a one-page playbook for your team."],
+  ["14", "Handover. We run the acceptance test together. You get a priced list of the next three agents."],
+  ["30", "Readout: hours back, measured against your day-1 baseline."],
+];
+const truths = [
+  { Icon: Key, title: "Your accounts.", text: "Claude and every connected account stay in your company’s name. Seats are bought from Anthropic directly, with no markup." },
+  { Icon: Check, title: "Your approval.", text: "Nothing books a load, pays a carrier or sends a rate confirmation without a person on your team approving it." },
+  { Icon: Eye, title: "Your data.", text: "I work inside your accounts. I don’t copy your data into tools I own." },
+  { Icon: File, title: "Your exit.", text: "Cancel Crew Care and you keep every agent, prompt and playbook." },
+];
+const questions = faq(6, 7, 8, 9);
+---
+
+<Base
+  title="How a 14-day agent sprint works — FreightCrews"
+  description="Every sprint starts with a written acceptance test. See what happens from day 0 to the day-30 readout, and what stays yours."
+  jsonld={[faqSchema(questions)]}
+>
+  <PageHead title="Fourteen days." italic="Written down from day one." lead="Every sprint starts with a written acceptance test. The agent ships when it passes. Not before." />
+
+  <section class="section">
+    <div class="container-x">
+      <ol class="timeline">
+        {days.map(([day, text]) => (
+          <li>
+            <span class="mono day">Day {day}</span>
+            <p>{text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <Split title="What stays true" class="section-alt">
+    <ul class="truths">
+      {truths.map(({ Icon, title, text }) => (
+        <li>
+          <Icon size={24} stroke-width={1.5} aria-hidden="true" />
+          <div><h3>{title}</h3><p>{text}</p></div>
+        </li>
+      ))}
+    </ul>
+  </Split>
+
+  <Split title="FAQ" id="faq"><FAQ items={questions} /></Split>
+
+  <CTABand />
+</Base>
+
+<style>
+  .timeline { max-width: 880px; margin-inline: auto; }
+  .timeline li { position: relative; display: grid; gap: 4px; max-width: none; padding: 0 0 40px 36px; }
+  .timeline li:last-child { padding-bottom: 0; }
+  /* dot, then the line down to the next one */
+  .timeline li::before { content: ""; position: absolute; left: 0; top: 7px; width: 9px; height: 9px; border-radius: 999px; background: var(--signal); }
+  .timeline li:not(:last-child)::after { content: ""; position: absolute; left: 4px; top: 22px; bottom: -1px; width: 1px; background: var(--line); }
+  .day { text-transform: uppercase; padding-top: 2px; white-space: nowrap; }
+  @media (min-width: 700px) {
+    .timeline li { grid-template-columns: 140px minmax(0, 1fr); gap: 24px; }
+    .day { padding-top: 5px; }
+  }
+  .truths li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 20px; padding-block: 28px; border-top: 1px solid var(--line); max-width: none; }
+  .truths p { margin-top: 8px; color: var(--ink-2); }
+  .truths :global(svg) { margin-top: 1px; }
+</style>

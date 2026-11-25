@@ -1,0 +1,34 @@
+---
+// A dynamic route so that nothing at all is built until the demo is real (§9).
+import Base from "../layouts/Base.astro";
+import CTABand from "../components/CTABand.astro";
+import MetricCard from "../components/MetricCard.astro";
+import PageHead from "../components/PageHead.astro";
+import Split from "../components/Split.astro";
+import { proofEntry } from "../content";
+
+export async function getStaticPaths() {
+  const entry = await proofEntry();
+  return entry ? [{ params: { proof: "proof" }, props: { entry } }] : [];
+}
+
+const d = Astro.props.entry.data;
+const sections = [
+  ["The short version", d.short_version],
+  ["The situation", d.situation],
+  ["What was built", d.built],
+  ["How it was tested", d.tested],
+  ["Honest limits", d.limits],
+] as const;
+---
+
+<Base title="Proof — FreightCrews" description="Demo on a mock brokerage with sample data. Not a client result.">
+  <PageHead title="Proof" lead="Demo on a mock brokerage with sample data. Not a client result." />
+  {d.metrics.length > 0 && (
+    <section class="section">
+      <div class="container-x grid gap-4 md:grid-cols-3">{d.metrics.map((m) => <MetricCard {...m} />)}</div>
+    </section>
+  )}
+  {sections.map(([title, text]) => text && <Split title={title} class="section-rule"><p>{text}</p></Split>)}
+  <CTABand />
+</Base>

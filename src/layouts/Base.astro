@@ -7,6 +7,8 @@ import serif from "@fontsource/instrument-serif/files/instrument-serif-latin-400
 import serifItalic from "@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2?url";
 import inter from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import { SITE } from "../config";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 interface Props {
   title: string;
@@ -50,9 +52,9 @@ const image = new URL("/og.png", SITE.DOMAIN).href;
     ))}
   </head>
   <body>
-    <slot name="header" />
+    <Header />
     <main id="main" tabindex="-1"><slot /></main>
-    <slot name="footer" />
+    <Footer />
     <script>
       // Scroll reveal. Sections already on screen are left alone, so nothing flashes.
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {

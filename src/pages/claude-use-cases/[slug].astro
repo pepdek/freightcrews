@@ -1,0 +1,100 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Card from "../../components/Card.astro";
+import CTABand from "../../components/CTABand.astro";
+import LeadMagnet from "../../components/LeadMagnet.astro";
+import { breadcrumbSchema } from "../../lib";
+
+export async function getStaticPaths() {
+  return (await getCollection("niches")).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const n = entry.data;
+let next = 1;
+const groups = n.groups.map((g) => {
+  const start = next;
+  next += g.jobs.length;
+  return { ...g, start };
+});
+const total = next - 1;
+---
+
+<Base
+  title={n.title}
+  description={n.meta}
+  jsonld={[breadcrumbSchema(["Home", "/"], ["Learn", "/claude-use-cases/"], [n.name, `/claude-use-cases/${entry.id}/`])]}
+>
+  <section class="head">
+    <div class="container-x">
+      <nav class="eyebrow no-print" aria-label="Breadcrumb"><a href="/claude-use-cases/">Learn</a><span aria-hidden="true">/</span><span aria-current="page">{n.name}</span></nav>
+      <h1>{total} jobs Claude can take off a <em>{n.noun}</em> desk</h1>
+      <p class="lead">{n.lead}</p>
+    </div>
+  </section>
+
+  <section class="list">
+    <div class="container-x">
+      {groups.map((g) => (
+        <div class="group grid-12">
+          <h2 class="h2-sm">{g.role}</h2>
+          <ol start={g.start}>
+            {g.jobs.map((job) => (
+              <li>{typeof job === "string" ? job : <a class="link" href={`/agents/${job.agent.id}/`}>{job.text}</a>}</li>
+            ))}
+          </ol>
+        </div>
+      ))}
+      <div class="stays grid-12">
+        <Card class="box">
+          <h2 class="h2-sm">What stays with a person</h2>
+          <p>{n.stays}</p>
+        </Card>
+      </div>
+      <p class="print-only">freightcrews.com</p>
+    </div>
+  </section>
+
+  <LeadMagnet niche={entry.id} class="section-alt" />
+  <CTABand />
+</Base>
+
+<style>
+  .head { padding-block: clamp(56px, 8vw, 112px) clamp(48px, 6vw, 80px); border-bottom: 1px solid var(--line); }
+  .eyebrow a { text-decoration: none; padding-block: 4px; }
+  .eyebrow a:hover { text-decoration: underline; }
+  h1 { max-width: 13em; }
+  h1 em { display: inline; }
+  .list { padding-block: 0 clamp(72px, 10vw, 140px); }
+  .group { padding-block: clamp(40px, 5vw, 64px); border-bottom: 1px solid var(--line); row-gap: 20px; }
+  ol { padding-left: 2.4em; list-style: decimal; }
+  li { padding: 9px 0 9px 8px; max-width: none; }
+  li::marker { font-family: var(--font-mono); font-weight: 500; font-size: 0.75rem; color: var(--ink-2); }
+  .stays { margin-top: clamp(40px, 5vw, 64px); }
+  .stays p { margin-top: 12px; }
+  .print-only { display: none; }
+  @media (min-width: 900px) {
+    h2 { grid-column: 1 / span 5; }
+    ol { grid-column: 6 / span 7; }
+    .stays :global(.box) { grid-column: 6 / span 7; }
+  }
+  /* The printed page is "the list". */
+  @media print {
+    @page { margin: 14mm; }
+    .head { padding: 0 0 12px; }
+    h1 { font-size: 26pt; max-width: none; }
+    .lead { margin-top: 6px; font-size: 10pt; }
+    .container-x { max-width: none; padding: 0; }
+    .list { padding: 0; }
+    .group { display: block; padding: 10px 0; break-inside: avoid; }
+    h2.h2-sm { font-size: 14pt; margin-bottom: 4px; }
+    ol { columns: 2; column-gap: 24px; }
+    li { padding: 1px 0 1px 4px; font-size: 9.5pt; line-height: 1.4; break-inside: avoid; }
+    .list a { color: inherit; text-decoration: none; }
+    .stays { display: block; margin-top: 12px; break-inside: avoid; }
+    .stays :global(.box) { padding: 12px; background: none; }
+    .stays p { font-size: 10pt; margin-top: 4px; }
+    .print-only { display: block; margin-top: 12px; font-size: 9pt; }
+  }
+</style>

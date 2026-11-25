@@ -1,0 +1,50 @@
+---
+import Base from "../layouts/Base.astro";
+import FAQ from "../components/FAQ.astro";
+import PageHead from "../components/PageHead.astro";
+import PricingCards from "../components/PricingCards.astro";
+import Split from "../components/Split.astro";
+import { faq, faqSchema } from "../data/faq";
+import { OFFERS, PRICING_NOTES } from "../data/pricing";
+import { SITE } from "../config";
+
+const questions = faq(3, 5, 7);
+const service = {
+  "@type": "Service",
+  name: "Claude agents for small freight brokerages",
+  provider: { "@type": "Organization", name: SITE.BRAND, url: SITE.DOMAIN },
+  offers: OFFERS.map((o) => ({
+    "@type": "Offer",
+    name: o.name,
+    price: o.amount,
+    priceCurrency: "USD",
+    url: new URL("/pricing/", SITE.DOMAIN).href,
+    ...(o.monthly && { priceSpecification: { "@type": "UnitPriceSpecification", price: o.amount, priceCurrency: "USD", unitCode: "MON" } }),
+  })),
+};
+---
+
+<Base
+  title="Pricing — FreightCrews"
+  description="Fixed prices on the page: free teardown, $2,997 first agent sprint, $7,500 desk install, and Crew Care at $1,200 a month."
+  jsonld={[service, faqSchema(questions)]}
+>
+  <PageHead title="Fixed prices." italic="Signed before we start." lead="The number you sign is the number you pay. Your Claude subscription is billed by Anthropic separately." />
+
+  <section class="section">
+    <div class="container-x">
+      <PricingCards />
+      <ul class="notes">
+        {PRICING_NOTES.map((n) => <li><strong>{n.label}</strong> {n.text}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <Split title="FAQ" id="faq" class="section-alt"><FAQ items={questions} /></Split>
+</Base>
+
+<style>
+  .notes { margin-top: 48px; border-top: 1px solid var(--line); }
+  .notes li { padding-block: 16px; border-bottom: 1px solid var(--line); max-width: none; }
+  strong { font-weight: 600; }
+</style>

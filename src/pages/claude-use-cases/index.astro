@@ -1,0 +1,45 @@
+---
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import Base from "../../layouts/Base.astro";
+import Card from "../../components/Card.astro";
+import LeadMagnet from "../../components/LeadMagnet.astro";
+import PageHead from "../../components/PageHead.astro";
+import Tag from "../../components/Tag.astro";
+import { nicheLinks } from "../../content";
+
+const niches = await nicheLinks();
+---
+
+<Base
+  title="Claude use cases for freight — FreightCrews"
+  description="Claude use cases for freight brokers, freight agents and drayage, grouped by who does the work today."
+>
+  <PageHead title="What Claude can do" italic="at your desk." lead="Pick your business. Each list is grouped by who does the work today, and marks what stays with a person." />
+  <section class="section">
+    <div class="container-x">
+      <ul class="niches">
+        {niches.map((n) => (
+          <Card as="li" class="niche card-link">
+            <h2><a href={n.href}>{n.name}</a></h2>
+            <p class="small">{n.lead}</p>
+            <div><Tag>{n.count} jobs</Tag><ArrowRight size={20} stroke-width={1.5} aria-hidden="true" /></div>
+          </Card>
+        ))}
+      </ul>
+    </div>
+  </section>
+  <LeadMagnet class="section-alt" />
+</Base>
+
+<style>
+  .niches { display: grid; gap: 24px; }
+  @media (min-width: 800px) { .niches { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  :global(.niche) { position: relative; display: flex; flex-direction: column; max-width: none; }
+  h2 { font-family: var(--font-sans); font-size: 1.25rem; font-weight: 600; line-height: 1.3; }
+  a { text-decoration: none; }
+  a::after { content: ""; position: absolute; inset: 0; border-radius: 10px; }
+  a:focus-visible { outline: none; }
+  a:focus-visible::after { outline: 2px solid var(--signal); outline-offset: 2px; }
+  p { margin-top: 12px; color: var(--ink-2); }
+  div { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 28px; }
+</style>

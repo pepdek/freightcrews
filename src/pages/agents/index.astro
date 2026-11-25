@@ -1,0 +1,19 @@
+---
+import Base from "../../layouts/Base.astro";
+import AgentGrid from "../../components/AgentGrid.astro";
+import PageHead from "../../components/PageHead.astro";
+import { BOOK_HREF } from "../../lib";
+---
+
+<Base
+  title="The agents — FreightCrews"
+  description="Quote replies, rate con intake, carrier packet review, tracking emails, POD matching. One job per agent, approved by a person."
+>
+  <PageHead title="The crew." italic="One job per agent." lead="Each agent does one repeat task on your desk, drafts the work, and waits for a person to approve it." />
+  <section class="section">
+    <div class="container-x">
+      <AgentGrid level="h2" />
+      <p class="section-foot">Need a different job done? Most teardowns find it. <a class="link" href={BOOK_HREF}>Book one.</a></p>
+    </div>
+  </section>
+</Base>

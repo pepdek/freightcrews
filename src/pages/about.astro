@@ -1,0 +1,37 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import PageHead from "../components/PageHead.astro";
+import Portrait from "../components/Portrait.astro";
+import { SITE } from "../config";
+import { BOOK_HREF, orgSchema } from "../lib";
+---
+
+<Base
+  title="About Pep Dekker — FreightCrews"
+  description="Pep Dekker sets up Claude agents for small freight brokerages from Tacoma, WA. You work with the founder, start to finish."
+  jsonld={orgSchema}
+>
+  <PageHead title={`${SITE.FOUNDER_NAME}.`} italic={`${SITE.CITY}.`} />
+  <section class="section">
+    <div class="container-x grid-12">
+      <div class="who"><Portrait /></div>
+      <div class="story">
+        <p>I spent 18 years building lead generation and marketing systems for small businesses. The common thread was always the same: small teams doing the work of bigger ones, buried in repeat tasks.</p>
+        <p>Claude changed what a small team can set up for itself. Freight brokerages are a near-perfect fit: desk work, email all day, the same details typed three times, and big competitors who already have AI help.</p>
+        <p>I’m not a freight veteran, and I won’t pretend to be. So every engagement starts with watching your reps work and measuring where the hours go. Then I build one agent, prove it against a written test, and hand it over in your accounts.</p>
+        <p>You work with me directly, from the first call to handover.</p>
+        <Button href={BOOK_HREF} class="cta">Book a free teardown</Button>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .story p + p { margin-top: 24px; }
+  .story :global(.cta) { margin-top: 40px; }
+  @media (min-width: 900px) {
+    .who { grid-column: 1 / span 4; }
+    .story { grid-column: 6 / span 7; }
+  }
+</style>

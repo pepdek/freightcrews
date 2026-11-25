@@ -1,0 +1,101 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import AgentGrid from "../../components/AgentGrid.astro";
+import Card from "../../components/Card.astro";
+import CTABand from "../../components/CTABand.astro";
+import FAQ from "../../components/FAQ.astro";
+import MetricCard from "../../components/MetricCard.astro";
+import PageHead from "../../components/PageHead.astro";
+import Split from "../../components/Split.astro";
+import { faqSchema } from "../../data/faq";
+import { breadcrumbSchema } from "../../lib";
+import { agentLinks, nicheLinks, proofEntry } from "../../content";
+
+export async function getStaticPaths() {
+  return (await getCollection("agents")).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const a = entry.data;
+const all = await agentLinks();
+const index = all.findIndex((x) => x.id === entry.id);
+const related = [1, 2].map((step) => all[(index + step) % all.length]!.id);
+const niche = (await nicheLinks())[0]!;
+const demo = (await proofEntry()) ? a.demo : undefined;
+---
+
+<Base
+  title={a.title}
+  description={a.meta}
+  jsonld={[breadcrumbSchema(["Home", "/"], ["Agents", "/agents/"], [a.name, `/agents/${entry.id}/`]), faqSchema(a.faq)]}
+>
+  <PageHead title={a.h1} italic={a.h1_italic} lead={a.oneliner}>
+    <nav slot="above" class="eyebrow" aria-label="Breadcrumb"><a href="/agents/">Agents</a><span aria-hidden="true">/</span><span aria-current="page">{a.name}</span></nav>
+  </PageHead>
+
+  <Split title="The job today" class="detail">
+    <ol class="job">{a.job.map((step, i) => <li><span class="mono" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>{step}</li>)}</ol>
+  </Split>
+
+  <Split title="What the agent does" class="detail section-alt">
+    <Card class="flow">
+      <div><h3 class="mono">In</h3><p>{a.input}</p></div>
+      <div><h3 class="mono">Out</h3><p>{a.output}</p></div>
+    </Card>
+  </Split>
+
+  <Split title="Where your team approves" class="detail">
+    <p class="statement">{a.approval}</p>
+  </Split>
+
+  <Split title="What it needs access to" class="detail section-rule">
+    <ul class="access">{a.access.map((item) => <li>{item}</li>)}</ul>
+  </Split>
+
+  <Split title="Time back" class="detail section-alt">
+    <div class="metric-wrap">
+      <MetricCard label="Estimate" value={a.time_value} unit={a.time_unit} caption="Estimated for a typical small desk. Your teardown measures yours." />
+    </div>
+  </Split>
+
+  {demo && (
+    <Split title="Demo" class="detail">
+      <p>Demo on a mock brokerage with sample data. Not a client result.</p>
+      <p class="section-foot"><a class="link link-block" href={demo}>Demo →</a></p>
+    </Split>
+  )}
+
+  <Split title="FAQ" class="detail"><FAQ items={a.faq} /></Split>
+
+  <section class="section section-rule">
+    <div class="container-x">
+      <div class="section-head"><h2>The crew. <em>One job per agent.</em></h2></div>
+      <AgentGrid only={related} />
+      <p class="section-foot"><a class="link link-block" href={niche.href}>{niche.count} jobs Claude can take off a {niche.noun} desk →</a></p>
+    </div>
+  </section>
+
+  <CTABand />
+</Base>
+
+<style>
+  .eyebrow a { text-decoration: none; padding-block: 4px; }
+  .eyebrow a:hover { text-decoration: underline; }
+  :global(.section.detail) { padding-block: clamp(56px, 7vw, 96px); }
+  .job { border-top: 1px solid var(--line); }
+  .job li { display: grid; grid-template-columns: 40px minmax(0, 1fr); align-items: baseline; padding-block: 18px; border-bottom: 1px solid var(--line); max-width: none; }
+  .job .mono { color: var(--signal-ink); }
+  :global(.flow) { display: grid; gap: 28px; }
+  h3.mono { font-size: 0.75rem; text-transform: uppercase; color: var(--ink-2); margin-bottom: 10px; }
+  :global(.flow) div + div { border-top: 1px solid var(--line); padding-top: 28px; }
+  @media (min-width: 640px) {
+    :global(.flow) { grid-template-columns: 2fr 3fr; }
+    :global(.flow) div + div { border-top: 0; padding-top: 0; border-left: 1px solid var(--line); padding-left: 28px; }
+  }
+  :global(.flow) p::first-letter { text-transform: uppercase; }
+  .statement { font-size: 1.25rem; line-height: 1.5; max-width: 34em; }
+  .access { border-top: 1px solid var(--line); }
+  .access li { padding-block: 18px; border-bottom: 1px solid var(--line); max-width: none; }
+  .metric-wrap { max-width: 460px; }
+</style>

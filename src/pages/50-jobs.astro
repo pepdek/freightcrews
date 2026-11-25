@@ -1,0 +1,29 @@
+---
+import Base from "../layouts/Base.astro";
+import Card from "../components/Card.astro";
+import LeadForm from "../components/LeadForm.astro";
+---
+
+<Base
+  title="50 jobs Claude can take off your desk — FreightCrews"
+  description="Get the free list of jobs Claude can take off your desk. Pick your business: freight broker, freight agent or drayage."
+>
+  <section class="section">
+    <div class="container-x grid-12">
+      <div class="intro">
+        <h1>50 jobs Claude can take off <em>your</em> desk.</h1>
+        <p class="lead">Pick your business. You’ll get the list right away, plus one short email a week with a new agent demo. Unsubscribe anytime.</p>
+      </div>
+      <div class="form-col"><Card><LeadForm /></Card></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { font-size: clamp(2.75rem, 5vw, 4rem); }
+  h1 em { display: inline; }
+  @media (min-width: 900px) {
+    .intro { grid-column: 1 / span 5; }
+    .form-col { grid-column: 7 / span 6; }
+  }
+</style>

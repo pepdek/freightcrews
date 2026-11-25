@@ -1,0 +1,27 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import Rows from "../components/Rows.astro";
+
+const items = [
+  { title: "Accounts stay yours.", text: "Claude and every connected account are opened in your company’s name. I work as a user you can remove at any time." },
+  { title: "Approval by default.", text: "Agents draft and check. Nothing that books a load, pays a carrier, sends a rate confirmation or moves money happens without a person on your team approving it." },
+  { title: "No passwords shared.", text: "You sign in and grant access yourself. Two-factor codes stay on your devices." },
+  { title: "Least access.", text: "Each agent gets only the access its job needs, read-only where possible." },
+  { title: "Written record.", text: "You get a dated list of every connection and permission at handover." },
+  { title: "Leaving is simple.", text: "Remove my user, and everything I built keeps running in your account." },
+];
+---
+
+<Base
+  title="Security — FreightCrews"
+  description="Your accounts stay in your name, agents wait for approval, and each one gets only the access its job needs."
+>
+  <PageHead title="Your accounts." italic="Your approvals." />
+  <section class="section">
+    <div class="container-x">
+      <Rows items={items} />
+      <p class="section-foot small muted">This page describes how I work. It isn’t legal advice or a compliance certification.</p>
+    </div>
+  </section>
+</Base>

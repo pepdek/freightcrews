@@ -1,0 +1,48 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import { SITE } from "../config";
+import { nicheLinks } from "../content";
+
+const niches = (await nicheLinks()).map((n) => n.id);
+---
+
+<Base title="Thanks — FreightCrews" description="Your form was received." noindex>
+  <section class="section">
+    <div class="container-x thanks" data-thanks data-niches={niches.join(" ")}>
+      <h1>
+        <span data-v="teardown" id="teardown">Got it. <em>Talk soon.</em></span>
+        <span data-v="list" id="list">Your list is <em>ready.</em></span>
+      </h1>
+      <div data-v="teardown">
+        <p class="lead">I’ll reply within one business day to set a time.{SITE.EMAIL && <> If it’s urgent, email <a class="link" href={`mailto:${SITE.EMAIL}`}>{SITE.EMAIL}</a>.</>}</p>
+      </div>
+      <div data-v="list">
+        <Button href="/claude-use-cases/" class="open" data-open>Open the list</Button>
+        <p class="small muted tip">Tip: use your browser’s Print to save it as a PDF.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Without this script the #teardown / #list fragment on the form action picks the message.
+  const root = document.querySelector<HTMLElement>("[data-thanks]")!;
+  const query = new URLSearchParams(location.search);
+  const form = query.get("form");
+  if (form === "teardown" || form === "list") root.dataset.form = form;
+  const niche = query.get("niche") ?? "";
+  if (root.dataset.niches!.split(" ").includes(niche)) {
+    root.querySelector<HTMLAnchorElement>("[data-open]")!.href = `/claude-use-cases/${niche}/`;
+  }
+</script>
+
+<style>
+  .section { min-height: 52vh; }
+  h1 em { display: block; }
+  [data-v="list"] { display: none; }
+  .thanks:is([data-form="list"], :has(#list:target)) [data-v="list"] { display: revert; }
+  .thanks:is([data-form="list"], :has(#list:target)) [data-v="teardown"] { display: none; }
+  .thanks :global(.open) { margin-top: 36px; }
+  .tip { margin-top: 20px; }
+</style>

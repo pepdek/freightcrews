@@ -1,0 +1,19 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import Rows from "../components/Rows.astro";
+
+const updated = new Date().toLocaleDateString("en-US", { dateStyle: "long", timeZone: "America/Los_Angeles" });
+const items = [
+  { title: "Site content", text: "The content on this site is informational. It is not legal or financial advice." },
+  { title: "Services", text: "Services are governed by the signed agreement." },
+  { title: "Governing law", text: "These terms are governed by Washington law." },
+];
+---
+
+<Base title="Terms — FreightCrews" description="Terms for using the FreightCrews website.">
+  <PageHead title="Terms">
+    <p class="lead small">Last updated: {updated}</p>
+  </PageHead>
+  <section class="section"><div class="container-x"><Rows items={items} /></div></section>
+</Base>

@@ -1,12 +1,109 @@
 ---
 import Base from "../layouts/Base.astro";
+import AgentGrid from "../components/AgentGrid.astro";
+import CompareTable from "../components/CompareTable.astro";
+import CTABand from "../components/CTABand.astro";
+import DeskWidget from "../components/DeskWidget.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import FAQ from "../components/FAQ.astro";
+import FounderNote from "../components/FounderNote.astro";
+import Hero from "../components/Hero.astro";
+import LeadMagnet from "../components/LeadMagnet.astro";
+import Marquee from "../components/Marquee.astro";
+import MetricCard from "../components/MetricCard.astro";
+import PainGrid from "../components/PainGrid.astro";
+import PricingCards from "../components/PricingCards.astro";
+import Split from "../components/Split.astro";
+import Steps from "../components/Steps.astro";
+import { COMPARE_SHORT } from "../data/compare";
+import { faq, faqSchema } from "../data/faq";
+import { orgSchema } from "../lib";
+import { proofEntry } from "../content";
+
+const questions = faq(1, 2, 3, 4, 5);
+const proof = await proofEntry();
 ---
 
 <Base
   title="FreightCrews — Claude agents for small freight brokerages"
   description="We set up Claude agents inside your email and TMS in 14 days: quote replies, rate cons, carrier packets, tracking emails. Fixed price. Your accounts."
+  jsonld={[...orgSchema, faqSchema(questions)]}
 >
-  <div class="container-x section">
-    <h1>AI agents for small freight brokerages. <em>Yours to keep.</em></h1>
-  </div>
+  <Hero />
+  <Marquee />
+
+  <Split title="Where a desk’s week" italic="actually" after="goes.">
+    <DeskWidget />
+  </Split>
+
+  <section class="section section-alt">
+    <div class="container-x">
+      <div class="section-head">
+        <Eyebrow>The problem</Eyebrow>
+        <h2>Your reps were hired to move freight. <em>Not to type.</em></h2>
+      </div>
+      <PainGrid />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-x">
+      <div class="section-head">
+        <Eyebrow>How it works</Eyebrow>
+        <h2>Three steps. <em>No new platform.</em></h2>
+      </div>
+      <Steps />
+      <p class="section-foot"><a class="link link-block" href="/how-it-works/">How the 14 days run →</a></p>
+    </div>
+  </section>
+
+  <section class="section section-rule">
+    <div class="container-x">
+      <div class="section-head">
+        <Eyebrow>The crew</Eyebrow>
+        <h2>Five agents to start. <em>One job each.</em></h2>
+      </div>
+      <AgentGrid />
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container-x">
+      <div class="section-head"><h2>Rent a crew, or <em>own one.</em></h2></div>
+      <CompareTable {...COMPARE_SHORT} caption="FreightCrews compared with a managed ops service and hiring another rep" />
+      <p class="section-foot"><a class="link link-block" href="/compare/">Full comparison →</a></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-x">
+      <div class="section-head"><h2>Prices on the page. <em>They don’t move.</em></h2></div>
+      <PricingCards compact />
+      <p class="section-foot"><a class="link link-block" href="/pricing/">See pricing</a></p>
+    </div>
+  </section>
+
+  <FounderNote />
+
+  {proof && (
+    <section class="section">
+      <div class="container-x">
+        <div class="section-head">
+          <h2>Proof</h2>
+          <p class="lead">Demo on a mock brokerage with sample data. Not a client result.</p>
+        </div>
+        <div class="grid gap-4 md:grid-cols-3">{proof.data.metrics.map((m) => <MetricCard {...m} />)}</div>
+        <p class="section-foot"><a class="link link-block" href="/proof/">Proof →</a></p>
+      </div>
+    </section>
+  )}
+
+  <LeadMagnet class="section-alt" />
+
+  <Split title="FAQ">
+    <FAQ items={questions} />
+    <p class="section-foot"><a class="link link-block" href="/how-it-works/#faq">More questions →</a></p>
+  </Split>
+
+  <CTABand />
 </Base>

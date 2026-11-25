@@ -1,0 +1,16 @@
+---
+import Card from "./Card.astro";
+import LeadForm from "./LeadForm.astro";
+import Split from "./Split.astro";
+
+interface Props {
+  niche?: string;
+  class?: string;
+}
+const { niche, class: extra } = Astro.props;
+---
+
+<Split title="50 jobs Claude can take off" italic="your" after="desk." class={["no-print", extra].filter(Boolean).join(" ")}>
+  <p slot="side" class="lead">Pick your business. Get the list, grouped by who does the work today.</p>
+  <Card><LeadForm niche={niche} /></Card>
+</Split>
