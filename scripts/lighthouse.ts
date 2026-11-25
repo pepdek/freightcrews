@@ -1,4 +1,5 @@
 // Gate 2: Lighthouse (mobile) on home, pricing and one agent page. Median of three runs per page.
+// Set SITE_URL to measure a deployed site instead of dist/; its reports get a -live suffix.
 import * as chromeLauncher from "chrome-launcher";
 import lighthouse from "lighthouse";
 import { report, serve } from "./shared.ts";
@@ -7,7 +8,9 @@ const targets = { home: "/", pricing: "/pricing/", agent: "/agents/quote-replies
 const minimum = { performance: 95, accessibility: 100, "best-practices": 100, seo: 100 };
 const keys = Object.keys(minimum) as (keyof typeof minimum)[];
 
-const server = await serve();
+const live = process.env.SITE_URL?.replace(/\/$/, "");
+const server = live ? { url: live, close: () => {} } : await serve();
+const suffix = live ? "-live" : "";
 const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless=new", "--no-first-run"] });
 const table = ["| Page | Performance | Accessibility | Best practices | SEO | FCP | LCP | TBT | CLS |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"];
 const failures: string[] = [];
@@ -23,7 +26,7 @@ try {
     runs.sort((a, b) => a.lhr.categories.performance!.score! - b.lhr.categories.performance!.score!);
     const { lhr, report: html } = runs[1]!;
     version = lhr.lighthouseVersion;
-    report(`lighthouse-${name}.html`, html as string);
+    report(`lighthouse-${name}${suffix}.html`, html as string);
     const scores = keys.map((k) => Math.round(lhr.categories[k]!.score! * 100));
     const metric = (id: string) => lhr.audits[id]!.displayValue!.replace(/ /g, " ");
     table.push(`| ${path} | ${scores.join(" | ")} | ${["first-contentful-paint", "largest-contentful-paint", "total-blocking-time", "cumulative-layout-shift"].map(metric).join(" | ")} |`);
@@ -40,6 +43,7 @@ try {
 }
 
 const summary = `lighthouse ${version} (mobile): ${Object.keys(targets).length} pages, ${failures.length} scores below target`;
-report("lighthouse.md", [summary, "", ...table, "", "Measured against a local gzip server, median of 3 runs. Re-check on the live Netlify URL after deploy.", ...failures].join("\n"));
+const where = live ? `Measured against ${live}` : "Measured against a local gzip server";
+report(`lighthouse${suffix}.md`, [summary, "", ...table, "", `${where}, median of 3 runs.`, ...failures].join("\n"));
 console.log([summary, ...table, ...failures].join("\n"));
 if (failures.length) process.exit(1);
