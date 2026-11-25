@@ -7,10 +7,11 @@ interface Props {
   autocomplete?: string;
   options?: { value: string; label: string }[];
   wide?: boolean;
+  value?: string;
 }
-const { name, label, type = "text", required = false, autocomplete, options = [], wide = false } = Astro.props;
+const { name, label, type = "text", required = false, autocomplete, options = [], wide = false, value } = Astro.props;
 const id = `f-${name}`;
-const shared = { id, name, required, autocomplete };
+const shared = { id, name, required, autocomplete, "aria-describedby": `${id}-error` };
 ---
 
 <div class:list={["field", { wide }]}>
@@ -20,10 +21,39 @@ const shared = { id, name, required, autocomplete };
   ) : type === "select" ? (
     <select {...shared}>
       <option value="">Choose one</option>
-      {options.map((o) => <option value={o.value}>{o.label}</option>)}
+      {options.map((o) => <option value={o.value} selected={o.value === value}>{o.label}</option>)}
     </select>
   ) : (
     <input {...shared} type={type} />
   )}
   <p class="error" id={`${id}-error`} hidden></p>
 </div>
+
+<script>
+  // Inline messages using the browser's own validation text. Without JS, native validation still applies.
+  type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+  for (const form of document.querySelectorAll<HTMLFormElement>("form[data-form]")) {
+    const show = (el: Control) => {
+      const out = form.querySelector<HTMLElement>(`#${el.id}-error`);
+      if (!out) return;
+      const message = el.validity.valid ? "" : el.validationMessage;
+      out.textContent = message;
+      out.hidden = !message;
+      if (message) el.setAttribute("aria-invalid", "true");
+      else el.removeAttribute("aria-invalid");
+    };
+    form.addEventListener(
+      "invalid",
+      (e) => {
+        e.preventDefault();
+        show(e.target as Control);
+        if (e.target === form.querySelector(":invalid")) (e.target as Control).focus();
+      },
+      true,
+    );
+    form.addEventListener("input", (e) => {
+      const el = e.target as Control;
+      if (el.hasAttribute("aria-invalid")) show(el);
+    });
+  }
+</script>

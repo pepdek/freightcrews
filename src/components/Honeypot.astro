@@ -1,0 +1,10 @@
+---
+interface Props {
+  form: string;
+}
+---
+
+{/* Netlify Forms plumbing: form name, the page it was sent from, and a field only bots fill in. */}
+<input type="hidden" name="form-name" value={Astro.props.form} />
+<input type="hidden" name="source" value={Astro.url.pathname} />
+<p hidden><label>Leave this field empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>

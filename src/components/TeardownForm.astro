@@ -1,11 +1,13 @@
 ---
 import Button from "./Button.astro";
 import Field from "./Field.astro";
+import Honeypot from "./Honeypot.astro";
 
 const options = (...labels: string[]) => labels.map((label) => ({ value: label, label }));
 ---
 
-<form class="form" name="teardown" method="POST" data-form>
+<form class="form" name="teardown" method="POST" action="/thanks/?form=teardown#teardown" data-netlify="true" netlify-honeypot="bot-field" data-form>
+  <Honeypot form="teardown" />
   <Field name="name" label="Name" required autocomplete="name" />
   <Field name="company" label="Company" required autocomplete="organization" />
   <Field name="role" label="Role" type="select" options={options("Owner", "Operations", "Sales", "Billing", "Other")} />

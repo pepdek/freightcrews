@@ -1,6 +1,7 @@
 ---
 import Button from "./Button.astro";
 import Field from "./Field.astro";
+import Honeypot from "./Honeypot.astro";
 
 interface Props {
   niche?: string;
@@ -11,12 +12,27 @@ const options = [
   { value: "freight-agents", label: "Freight agent" },
   { value: "drayage", label: "Drayage" },
 ];
+// The #list fragment lets /thanks/ show the right message with JavaScript off.
+const action = `/thanks/?form=list${niche ? `&niche=${niche}` : ""}#list`;
 ---
 
-<form class="form" name="list" method="POST" data-form data-niche={niche}>
+<form class="form" name="list" method="POST" action={action} data-netlify="true" netlify-honeypot="bot-field" data-form data-lead>
+  <Honeypot form="list" />
   <Field name="first-name" label="First name" required autocomplete="given-name" />
   <Field name="email" label="Work email" type="email" required autocomplete="email" />
-  <Field name="business-type" label="Business type" type="select" required options={options} wide />
+  <Field name="business-type" label="Business type" type="select" required options={options} value={niche} wide />
   <label class="check wide"><input type="checkbox" name="weekly-demo" value="yes" /><span>Send me the weekly demo email</span></label>
   <div class="wide"><Button type="submit">Send me the list</Button></div>
 </form>
+
+<script>
+  // Carry the chosen business type to the thank-you page.
+  for (const form of document.querySelectorAll<HTMLFormElement>("form[data-lead]")) {
+    const update = () => {
+      const niche = form.querySelector("select")!.value;
+      form.setAttribute("action", `/thanks/?form=list${niche ? `&niche=${niche}` : ""}#list`);
+    };
+    form.addEventListener("change", update);
+    form.addEventListener("submit", update);
+  }
+</script>
