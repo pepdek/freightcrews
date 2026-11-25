@@ -1,0 +1,11 @@
+:root {
+  --paper: #f5f2eb;      /* page background */
+  --paper-2: #ece7dc;    /* alternate sections, cards */
+  --ink: #16181a;        /* text, primary buttons */
+  --ink-2: #4a4f54;      /* secondary text */
+  --line: #dad3c4;       /* hairlines, borders */
+  --signal: #d9531e;     /* fills, rules, focus rings — never body text */
+  --signal-ink: #a93d12; /* accent as text or links */
+  --night: #14202b;      /* dark sections */
+  --night-ink: #ede8dd;  /* text on night */
+}

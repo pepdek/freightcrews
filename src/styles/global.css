@@ -1,0 +1,129 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* Only the brief's colors and fonts exist as Tailwind utilities. */
+@theme inline {
+  --color-*: initial;
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-line: var(--line);
+  --color-signal: var(--signal);
+  --color-signal-ink: var(--signal-ink);
+  --color-night: var(--night);
+  --color-night-ink: var(--night-ink);
+  --font-*: initial;
+  --font-serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Inter, Latin subset only (the package's own CSS ships every subset). */
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2") format("woff2-variations");
+}
+
+@layer base {
+  html { background: var(--paper); -webkit-text-size-adjust: 100%; scroll-padding-top: 88px; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-wrap: break-word;
+  }
+  h1, h2 { font-family: var(--font-serif); font-weight: 400; text-wrap: balance; }
+  h1 { font-size: clamp(2.75rem, 6vw, 5rem); line-height: 1.02; letter-spacing: -0.01em; }
+  h2 { font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.08; }
+  h1 em, h2 em { font-style: italic; }
+  h1 em { display: block; }
+  h3 { font-size: 1.25rem; font-weight: 600; line-height: 1.3; text-wrap: balance; }
+  p, li { max-width: 68ch; text-wrap: pretty; }
+  a { text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+}
+
+@layer components {
+  .container-x { width: 100%; max-width: 1120px; margin-inline: auto; padding-inline: 24px; }
+  /* 1120px of content: padding sits outside the measure. */
+  @media (min-width: 768px) { .container-x { max-width: 1200px; padding-inline: 40px; } }
+
+  .section { padding-block: clamp(72px, 10vw, 140px); }
+  .section-alt { background: var(--paper-2); }
+  .section-rule { border-top: 1px solid var(--line); }
+  .night { background: var(--night); color: var(--night-ink); }
+
+  .grid-12 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px 24px; }
+  @media (min-width: 900px) { .grid-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); } }
+
+  .small { font-size: 0.9375rem; line-height: 1.55; }
+  .muted { color: var(--ink-2); }
+  .lead { margin-top: 24px; color: var(--ink-2); max-width: 52ch; }
+
+  .eyebrow {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-mono); font-weight: 500; font-size: 0.75rem; line-height: 1.4;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2);
+    margin-bottom: 20px;
+  }
+  .eyebrow::before { content: ""; width: 16px; height: 2px; background: var(--signal); flex: none; }
+  .night .eyebrow { color: var(--night-ink); }
+
+  .mono { font-family: var(--font-mono); font-weight: 500; font-size: 0.75rem; letter-spacing: 0.04em; }
+
+  .link { color: var(--signal-ink); text-decoration: underline; text-underline-offset: 3px; }
+  .link:hover { text-decoration-thickness: 2px; }
+  .night .link { color: var(--night-ink); }
+  /* Standalone links get a 24px+ tap target. */
+  .link-block { display: inline-block; padding-block: 4px; font-size: 0.9375rem; }
+
+  .btn {
+    position: relative; overflow: hidden; isolation: isolate;
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 48px; padding: 0 20px; border: 1px solid var(--ink); border-radius: 10px;
+    font-size: 0.9375rem; font-weight: 500; line-height: 1.2; text-align: center; text-decoration: none; cursor: pointer;
+  }
+  .btn-primary { background: var(--ink); color: var(--paper); }
+  .btn-primary::after {
+    content: ""; position: absolute; inset: auto 0 0 0; height: 6px; background: var(--signal);
+    transform: scaleX(0); transform-origin: left;
+  }
+  .btn-primary:hover { background: #000; }
+  .btn-primary:hover::after { transform: scaleX(1); }
+  .btn-secondary { background: transparent; color: var(--ink); }
+  .btn-secondary:hover { box-shadow: inset 0 0 0 1px var(--ink); }
+  /* On night an ink button disappears, so the pair inverts. */
+  .night .btn-primary { background: var(--night-ink); color: var(--night); border-color: var(--night-ink); }
+  @media (prefers-reduced-motion: no-preference) {
+    .btn-primary::after { transition: transform 0.2s ease-out; }
+  }
+
+  .tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px;
+    font-family: var(--font-mono); font-weight: 500; font-size: 0.75rem; line-height: 1.4; color: var(--ink-2);
+  }
+
+  .card { background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 28px; }
+  .section-alt .card { background: var(--paper); }
+  a.card:hover, .card-link:hover { box-shadow: inset 0 0 0 1px var(--ink-2); }
+}
+
+/* Scroll reveal: once, 8px rise, 400ms. Only applied by script to off-screen sections. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal { opacity: 0; transform: translateY(8px); }
+  .reveal-in { transition: opacity 0.4s ease-out, transform 0.4s ease-out; opacity: 1; transform: none; }
+}
+
+@media print {
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .no-print, header, footer { display: none !important; }
+  html, body { background: #fff; }
+}
