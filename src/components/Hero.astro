@@ -1,0 +1,56 @@
+---
+import { Image } from "astro:assets";
+import Button from "./Button.astro";
+import Eyebrow from "./Eyebrow.astro";
+import { BOOK_HREF, asset } from "../lib";
+
+const photo = asset("hero.jpg");
+---
+
+<section class:list={["hero", { "has-photo": photo }]}>
+  <div class="grain" aria-hidden="true"></div>
+  <svg class="route" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <path pathLength="1" d="M-10 112 L58 108 L104 96 L171 99 L226 83 L262 62 L338 58 L391 71 L452 74 L497 94 L566 101 L641 92 L688 96 L742 79 L797 52 L861 48 L903 57 L974 53 L1022 34 L1094 38 L1139 24 L1210 20" />
+  </svg>
+  <div class="container-x layout">
+    <div class="copy">
+      <Eyebrow>For brokerages with 1–50 people</Eyebrow>
+      <h1>AI agents for small freight brokerages. <em>Yours to keep.</em></h1>
+      <p class="sub">I set up Claude agents inside your email and TMS in 14 days: quote replies, rate cons, carrier packets, tracking emails. Fixed price. Your accounts. Your reps approve everything.</p>
+      <div class="actions">
+        <Button href={BOOK_HREF}>Book a free teardown</Button>
+        <Button href="/agents/" variant="secondary">See the agents</Button>
+      </div>
+      <p class="small muted note">20 minutes. Three written recommendations, whether you hire me or not.</p>
+    </div>
+    {photo && <Image class="photo" src={photo} alt="" width={480} height={600} format="avif" fit="cover" loading="eager" fetchpriority="high" />}
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; isolation: isolate; overflow: hidden; padding-block: clamp(64px, 9vw, 120px) 168px;
+    background: radial-gradient(ellipse 70% 62% at 50% 38%, var(--paper-2), transparent 100%), var(--paper); }
+  .grain { position: absolute; inset: 0; z-index: -1; opacity: 0.04; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .route { position: absolute; inset: auto 0 20px 0; z-index: -1; width: 100%; height: 140px; }
+  .route path { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .copy { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  h1 { max-width: 12.5em; }
+  .sub { margin-top: 28px; max-width: 58ch; }
+  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 36px; }
+  .note { margin-top: 20px; }
+  .hero :global(.photo) { width: 100%; max-width: 420px; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 10px; filter: saturate(0.8); margin: 48px auto 0; }
+  @media (min-width: 900px) {
+    .has-photo .layout { display: grid; grid-template-columns: 7fr 5fr; gap: 48px; align-items: center; }
+    .has-photo .copy { align-items: flex-start; text-align: left; }
+    .has-photo .actions { justify-content: flex-start; }
+    .hero :global(.photo) { margin: 0; justify-self: end; }
+  }
+  @media (max-width: 479px) {
+    .actions { flex-direction: column; align-self: stretch; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .route path { stroke-dasharray: 1; animation: draw 1.6s ease-in-out both; }
+  }
+  @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+</style>

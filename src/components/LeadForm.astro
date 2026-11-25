@@ -1,0 +1,22 @@
+---
+import Button from "./Button.astro";
+import Field from "./Field.astro";
+
+interface Props {
+  niche?: string;
+}
+const { niche } = Astro.props;
+const options = [
+  { value: "freight-brokers", label: "Freight broker" },
+  { value: "freight-agents", label: "Freight agent" },
+  { value: "drayage", label: "Drayage" },
+];
+---
+
+<form class="form" name="list" method="POST" data-form data-niche={niche}>
+  <Field name="first-name" label="First name" required autocomplete="given-name" />
+  <Field name="email" label="Work email" type="email" required autocomplete="email" />
+  <Field name="business-type" label="Business type" type="select" required options={options} wide />
+  <label class="check wide"><input type="checkbox" name="weekly-demo" value="yes" /><span>Send me the weekly demo email</span></label>
+  <div class="wide"><Button type="submit">Send me the list</Button></div>
+</form>

@@ -1,0 +1,64 @@
+---
+import { SITE } from "../config";
+import { BOOK_HREF } from "../lib";
+import { agentLinks, nicheLinks } from "../content";
+
+const agents = await agentLinks();
+const niches = await nicheLinks();
+const columns = [
+  { title: "Agents", links: agents.map((a) => ({ label: a.name, href: a.href })) },
+  { title: "Who it’s for", links: niches.map((n) => ({ label: n.name, href: n.href })) },
+  {
+    title: "Company",
+    links: [
+      { label: "About", href: "/about/" },
+      { label: "Pricing", href: "/pricing/" },
+      { label: "Security", href: "/security/" },
+      { label: "Compare", href: "/compare/" },
+      { label: "Book a teardown", href: BOOK_HREF },
+      ...(SITE.EMAIL ? [{ label: SITE.EMAIL, href: `mailto:${SITE.EMAIL}` }] : []),
+      ...(SITE.PHONE ? [{ label: SITE.PHONE, href: `tel:${SITE.PHONE.replace(/[^+\d]/g, "")}` }] : []),
+    ],
+  },
+  {
+    title: "Free",
+    links: [
+      { label: "50 jobs list", href: "/50-jobs/" },
+      ...(SITE.LINKEDIN_URL ? [{ label: "LinkedIn", href: SITE.LINKEDIN_URL }] : []),
+    ],
+  },
+];
+const year = new Date().getFullYear();
+---
+
+<footer class="section-rule">
+  <div class="container-x">
+    <div class="columns">
+      {columns.map((column, i) => (
+        <nav aria-labelledby={`footer-${i}`}>
+          <p class="mono title" id={`footer-${i}`}>{column.title}</p>
+          <ul>{column.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+        </nav>
+      ))}
+    </div>
+    <div class="legal small">
+      <p>© {year} {SITE.BRAND}</p>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+      <p>{SITE.CITY}</p>
+    </div>
+    <p class="disclaimer small muted">FreightCrews is an independent consultancy. We are not affiliated with, endorsed by, or a partner of Anthropic or any software vendor named on this site. Claude is a trademark of Anthropic.</p>
+  </div>
+</footer>
+
+<style>
+  footer { padding-block: 72px 48px; }
+  .columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 24px; }
+  .title { text-transform: uppercase; color: var(--ink-2); margin-bottom: 8px; }
+  ul a { display: inline-block; padding: 6px 0; font-size: 0.9375rem; line-height: 1.4; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .legal { display: flex; flex-wrap: wrap; gap: 4px 24px; align-items: center; margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .legal a { padding-block: 4px; }
+  .disclaimer { margin-top: 12px; }
+  @media (min-width: 768px) { .columns { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+</style>

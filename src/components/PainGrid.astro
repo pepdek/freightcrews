@@ -1,0 +1,28 @@
+---
+const items = [
+  { n: "i", title: "The inbox runs the desk.", text: "Quote requests, check calls and carrier questions arrive faster than three reps can answer them." },
+  { n: "ii", title: "Retyping is the job.", text: "The same load details get keyed from email into the TMS, the rate con and the invoice." },
+  { n: "iii", title: "Every new carrier is a risk.", text: "Packets need checking against authority, insurance and contact records before anyone books." },
+  { n: "iv", title: "The big brokers already have help.", text: "Large brokerages run AI agents on their phones and inboxes. Small desks compete with them on every lane." },
+];
+---
+
+<ol class="pains">
+  {items.map((item) => (
+    <li>
+      <span class="mono">{item.n}.</span>
+      <div>
+        <h3>{item.title}</h3>
+        <p>{item.text}</p>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .pains { display: grid; column-gap: 48px; }
+  li { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; padding: 32px 0; border-top: 1px solid var(--line); }
+  .mono { color: var(--signal-ink); padding-top: 5px; }
+  p { margin-top: 10px; color: var(--ink-2); max-width: 46ch; }
+  @media (min-width: 768px) { .pains { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>

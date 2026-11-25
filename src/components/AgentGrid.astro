@@ -1,0 +1,31 @@
+---
+import AgentCard from "./AgentCard.astro";
+import { agentLinks } from "../content";
+
+interface Props {
+  level?: "h2" | "h3";
+  only?: string[];
+}
+const { level, only } = Astro.props;
+const all = await agentLinks();
+const agents = only ? only.map((id) => all.find((a) => a.id === id)!) : all;
+---
+
+<ul class:list={["agent-grid", { pair: agents.length === 2 }]}>
+  {agents.map((a) => <AgentCard name={a.name} oneliner={a.oneliner} replaces={a.replaces} href={a.href} level={level} />)}
+</ul>
+
+<style>
+  .agent-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  @media (min-width: 640px) {
+    .agent-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .agent-grid:not(.pair) > :global(:last-child) { grid-column: span 2; }
+  }
+  /* Five cards: two wide on top, three below. */
+  @media (min-width: 960px) {
+    .agent-grid:not(.pair) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .agent-grid:not(.pair) > :global(*) { grid-column: span 2; }
+    .agent-grid:not(.pair) > :global(:nth-child(-n + 2)) { grid-column: span 3; }
+    .agent-grid:not(.pair) > :global(:last-child) { grid-column: span 2; }
+  }
+</style>

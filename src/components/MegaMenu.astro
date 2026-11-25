@@ -1,0 +1,62 @@
+---
+import ChevronDown from "@lucide/astro/icons/chevron-down";
+
+interface Props {
+  agents: { name: string; href: string }[];
+  niches: { name: string; href: string }[];
+}
+const { agents, niches } = Astro.props;
+---
+
+<details class="mega" data-mega>
+  <summary>Agents <ChevronDown size={16} stroke-width={1.5} aria-hidden="true" /></summary>
+  <div class="panel">
+    <div class="cols">
+      <div>
+        <p class="mono label">By business</p>
+        <ul>{niches.map((n) => <li><a href={n.href}>{n.name}</a></li>)}</ul>
+      </div>
+      <div>
+        <p class="mono label">By job</p>
+        <ul>{agents.map((a) => <li><a href={a.href}>{a.name}</a></li>)}</ul>
+      </div>
+    </div>
+    <a class="link all" href="/agents/">See all agents →</a>
+  </div>
+</details>
+
+<script>
+  // Native <details> handles clicks. This adds: open on keyboard focus, close on leave/Escape/outside click.
+  const mega = document.querySelector<HTMLDetailsElement>("[data-mega]")!;
+  const summary = mega.querySelector("summary")!;
+  let returning = false;
+  summary.addEventListener("focus", () => {
+    if (!returning && summary.matches(":focus-visible")) mega.open = true;
+  });
+  mega.addEventListener("focusout", (e) => {
+    if (e.relatedTarget && !mega.contains(e.relatedTarget as Node)) mega.open = false;
+  });
+  mega.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || !mega.open) return;
+    mega.open = false;
+    returning = true;
+    summary.focus();
+    returning = false;
+  });
+  document.addEventListener("click", (e) => {
+    if (!mega.contains(e.target as Node)) mega.open = false;
+  });
+</script>
+
+<style>
+  .mega { position: relative; }
+  summary { display: flex; align-items: center; gap: 4px; list-style: none; cursor: pointer; font-size: 0.9375rem; padding: 10px 0; border-radius: 2px; }
+  summary::-webkit-details-marker { display: none; }
+  .mega[open] summary :global(svg) { transform: rotate(180deg); }
+  .panel { position: absolute; top: calc(100% + 12px); left: -28px; width: 460px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 28px; }
+  .cols { display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px; }
+  .label { text-transform: uppercase; color: var(--ink-2); margin-bottom: 8px; }
+  ul a { display: block; padding: 6px 0; font-size: 0.9375rem; text-decoration: none; }
+  ul a:hover { text-decoration: underline; text-decoration-color: var(--signal); text-decoration-thickness: 2px; }
+  .all { display: block; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 0.9375rem; }
+</style>

@@ -1,0 +1,21 @@
+---
+import { Image } from "astro:assets";
+import { SITE } from "../config";
+import { INITIALS, asset } from "../lib";
+
+const photo = asset(SITE.FOUNDER_PHOTO);
+---
+
+{photo ? (
+  <Image class="portrait" src={photo} alt={SITE.FOUNDER_NAME} width={400} height={500} format="avif" fit="cover" />
+) : (
+  <div class="portrait monogram" aria-hidden="true">{INITIALS}</div>
+)}
+
+<style>
+  .portrait { width: 100%; max-width: 320px; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 10px; }
+  .monogram { display: grid; place-items: center; border: 1px solid currentColor; font-size: 3.5rem; font-weight: 500; letter-spacing: 0.04em; }
+  @media (max-width: 899px) {
+    .monogram { max-width: 160px; aspect-ratio: 1; font-size: 2rem; }
+  }
+</style>

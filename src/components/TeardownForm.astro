@@ -1,0 +1,19 @@
+---
+import Button from "./Button.astro";
+import Field from "./Field.astro";
+
+const options = (...labels: string[]) => labels.map((label) => ({ value: label, label }));
+---
+
+<form class="form" name="teardown" method="POST" data-form>
+  <Field name="name" label="Name" required autocomplete="name" />
+  <Field name="company" label="Company" required autocomplete="organization" />
+  <Field name="role" label="Role" type="select" options={options("Owner", "Operations", "Sales", "Billing", "Other")} />
+  <Field name="email" label="Email" type="email" required autocomplete="email" />
+  <Field name="phone" label="Phone" type="tel" autocomplete="tel" />
+  <Field name="business-type" label="Business type" type="select" required options={options("Freight broker", "Freight agent", "Drayage", "Forwarder", "3PL", "Other")} />
+  <Field name="team-size" label="Team size" type="select" options={options("1–5", "6–15", "16–50", "50+")} />
+  <Field name="system" label="TMS or main system" />
+  <Field name="time-sink" label="What eats the most time on your desk?" type="textarea" wide />
+  <div class="wide"><Button type="submit">Request my teardown</Button></div>
+</form>

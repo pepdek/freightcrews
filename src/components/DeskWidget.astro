@@ -1,0 +1,106 @@
+---
+import Card from "./Card.astro";
+import Eyebrow from "./Eyebrow.astro";
+import Button from "./Button.astro";
+
+const tasks = [
+  { task: "Draft replies to 140 quote emails", hours: 4.5 },
+  { task: "Key 38 rate confirmations into the TMS", hours: 2.5 },
+  { task: "Review 9 new carrier packets", hours: 1.5 },
+  { task: "Send 60 check-call and status emails", hours: 2.0 },
+  { task: "Match 38 PODs to invoices", hours: 1.5 },
+];
+const total = tasks.reduce((sum, t) => sum + t.hours, 0).toFixed(1);
+---
+
+{/* Server-rendered in its final state, so no-JS and reduced-motion visitors need nothing else. */}
+<div class="desk" data-desk>
+  <Card>
+    <div class="head">
+      <Eyebrow>A broker’s desk this week</Eyebrow>
+      <p class="counter"><span data-count>{total}</span> / {total} hours back</p>
+    </div>
+    <ul>
+      {tasks.map(({ task, hours }) => (
+        <li data-row data-hours={hours} class="done">
+          <span class="task">{task}</span>
+          <span class="hours mono">{hours.toFixed(1)} hrs</span>
+          <span class="tag status"><span class="dot" aria-hidden="true"></span><span data-status>Done</span></span>
+        </li>
+      ))}
+    </ul>
+    <div class="foot"><Button variant="secondary" data-replay hidden>Replay</Button></div>
+  </Card>
+  <p class="small muted caption">Illustrative week for a three-rep desk. Your teardown measures your real numbers.</p>
+</div>
+
+<script>
+  const desk = document.querySelector<HTMLElement>("[data-desk]");
+  if (desk && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const rows = [...desk.querySelectorAll<HTMLElement>("[data-row]")];
+    const count = desk.querySelector<HTMLElement>("[data-count]")!;
+    const replay = desk.querySelector<HTMLButtonElement>("[data-replay]")!;
+    let timers: number[] = [];
+    let frame = 0;
+
+    const mark = (row: HTMLElement, done: boolean) => {
+      row.classList.toggle("done", done);
+      row.querySelector("[data-status]")!.textContent = done ? "Done" : "Waiting";
+    };
+    const countTo = (to: number) => {
+      cancelAnimationFrame(frame);
+      const from = Number(count.textContent);
+      const start = performance.now();
+      const step = (now: number) => {
+        const t = Math.min(1, Math.max(0, (now - start) / 400));
+        count.textContent = (from + (to - from) * t).toFixed(1);
+        if (t < 1) frame = requestAnimationFrame(step);
+      };
+      frame = requestAnimationFrame(step);
+    };
+    const reset = () => {
+      timers.forEach(clearTimeout);
+      cancelAnimationFrame(frame);
+      rows.forEach((row) => mark(row, false));
+      count.textContent = "0.0";
+    };
+    const play = () => {
+      reset();
+      let sum = 0;
+      timers = rows.map((row, i) => {
+        const upTo = (sum += Number(row.dataset.hours));
+        return window.setTimeout(() => { mark(row, true); countTo(upTo); }, (i + 1) * 700);
+      });
+    };
+
+    reset();
+    replay.hidden = false;
+    replay.addEventListener("click", play);
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry?.isIntersecting) { io.disconnect(); play(); } },
+      { threshold: 0.5 },
+    );
+    io.observe(desk);
+  }
+</script>
+
+<style>
+  .head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .head :global(.eyebrow) { margin: 0; }
+  .counter { font-family: var(--font-mono); font-weight: 500; font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
+  li { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "task status" "hours status"; align-items: center; column-gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); max-width: none; }
+  .task { grid-area: task; font-size: 0.9375rem; line-height: 1.45; }
+  .hours { grid-area: hours; color: var(--ink-2); }
+  .status { grid-area: status; justify-self: end; min-width: 88px; justify-content: center; background: var(--paper); }
+  .dot { width: 6px; height: 6px; border-radius: 999px; border: 1px solid var(--ink-2); }
+  .done .status { color: var(--ink); }
+  .done .dot { background: var(--signal); border-color: var(--signal); }
+  .foot { display: flex; justify-content: flex-end; min-height: 40px; margin-top: 20px; }
+  .foot :global(.btn) { min-height: 40px; }
+  .foot :global([hidden]) { display: none; }
+  .caption { margin-top: 16px; }
+  @media (min-width: 560px) {
+    li { grid-template-columns: minmax(0, 1fr) 72px 96px; grid-template-areas: "task hours status"; }
+    .hours { justify-self: end; }
+  }
+</style>

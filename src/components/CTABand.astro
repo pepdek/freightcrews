@@ -1,0 +1,17 @@
+---
+import Button from "./Button.astro";
+import { BOOK_HREF } from "../lib";
+---
+
+<section class="section night band no-print">
+  <div class="container-x">
+    <h2>Find the hours first.</h2>
+    <p>20 minutes. No pitch deck. You leave with three written recommendations.</p>
+    <Button href={BOOK_HREF}>Book a free teardown</Button>
+  </div>
+</section>
+
+<style>
+  .band { text-align: center; }
+  p { margin: 24px auto 36px; max-width: 46ch; }
+</style>

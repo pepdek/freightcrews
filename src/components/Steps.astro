@@ -1,0 +1,25 @@
+---
+const steps = [
+  { n: "01", title: "Teardown", text: "A free 20-minute call. We pick the one task that eats the most rep time and estimate the hours. You get three written recommendations the same day." },
+  { n: "02", title: "14-day sprint", text: "I build one agent on your own Claude account, connect it to your email and one system, and run it in shadow mode while your rep approves every draft. It ships when it passes the test we wrote down on day one." },
+  { n: "03", title: "Crew Care", text: "I watch it, fix it, add one new agent a month, and send you a Friday report of hours back." },
+];
+---
+
+<ol class="steps">
+  {steps.map((step) => (
+    <li>
+      <span class="mono">{step.n}</span>
+      <h3>{step.title}</h3>
+      <p>{step.text}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .steps { display: grid; gap: 32px; }
+  li { border-top: 1px solid var(--ink); padding-top: 20px; }
+  .mono { display: block; color: var(--signal-ink); margin-bottom: 28px; }
+  p { margin-top: 12px; color: var(--ink-2); }
+  @media (min-width: 840px) { .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+</style>

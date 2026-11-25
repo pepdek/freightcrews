@@ -1,0 +1,25 @@
+---
+const items = ["Freight brokers", "Freight agents", "Drayage", "Forwarders", "3PLs", "Customs brokers"];
+// Each half must be wider than the viewport, and the two halves identical, for a seamless-looking loop.
+const half = [items, items, items].flat();
+---
+
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    {[0, 1].map(() => <div class="half">{half.map((item) => <span>{item}<i>·</i></span>)}</div>)}
+  </div>
+</div>
+
+<style>
+  .marquee { overflow: hidden; border-block: 1px solid var(--line); padding-block: 18px; white-space: nowrap;
+    mask-image: linear-gradient(to right, transparent, var(--ink) 12%, var(--ink) 88%, transparent); }
+  .track { display: flex; width: max-content; }
+  .half { display: flex; }
+  span { font-size: 0.9375rem; color: var(--ink-2); }
+  i { font-style: normal; margin-inline: 20px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .track { animation: scroll-left 40s linear infinite; }
+    .marquee:hover .track { animation-play-state: paused; }
+  }
+  @keyframes scroll-left { to { transform: translateX(-50%); } }
+</style>

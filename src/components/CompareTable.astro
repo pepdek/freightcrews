@@ -1,0 +1,61 @@
+---
+import type { Comparison } from "../data/compare";
+
+interface Props extends Comparison {
+  caption: string;
+  full?: boolean;
+}
+const { columns, rows, caption, full = false } = Astro.props;
+---
+
+{/* Roles are explicit because the narrow layout changes display, which drops table semantics. */}
+<table class:list={["compare", { full }]} role="table">
+  <caption class="sr-only">{caption}</caption>
+  <thead role="rowgroup">
+    <tr role="row">
+      <td role="cell"></td>
+      {columns.map((c) => <th scope="col" role="columnheader">{c}</th>)}
+    </tr>
+  </thead>
+  <tbody role="rowgroup">
+    {rows.map((row) => (
+      <tr role="row">
+        <th scope="row" role="rowheader">{row.label}</th>
+        {row.values.map((value, i) => (
+          <td role="cell"><span class="col" aria-hidden="true">{columns[i]}</span><span>{value}</span></td>
+        ))}
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<style>
+  .compare { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 0.9375rem; line-height: 1.5; text-align: left; }
+  th, td { padding: 18px 16px; vertical-align: top; text-align: left; border-bottom: 1px solid var(--line); }
+  thead th { font-weight: 600; border-bottom-color: var(--ink); }
+  thead td { border-bottom-color: var(--ink); }
+  tbody th { font-weight: 500; color: var(--ink-2); padding-left: 0; }
+  tr > :nth-child(2) { background: var(--paper-2); }
+  :global(.section-alt) tr > :nth-child(2) { background: var(--paper); }
+  .col { display: none; }
+
+  /* Narrow screens: each row becomes a small stack, labelled by column. */
+  @media (max-width: 699px) {
+    .compare, tbody, tr, th, td { display: block; }
+    thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    tbody tr { padding-block: 24px; border-bottom: 1px solid var(--line); }
+    tbody th { padding: 0 0 8px; border: 0; color: var(--ink); font-weight: 600; }
+    td { display: grid; grid-template-columns: 42% minmax(0, 1fr); gap: 12px; padding: 8px 12px; border: 0; }
+    .col { display: block; color: var(--ink-2); }
+    tr > :nth-child(2) { border-radius: 10px; }
+  }
+  @media (min-width: 700px) and (max-width: 899px) {
+    .full, .full tbody, .full tr, .full th, .full td { display: block; }
+    .full thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .full tbody tr { padding-block: 24px; border-bottom: 1px solid var(--line); }
+    .full tbody th { padding: 0 0 8px; border: 0; color: var(--ink); font-weight: 600; }
+    .full td { display: grid; grid-template-columns: 34% minmax(0, 1fr); gap: 12px; padding: 8px 12px; border: 0; }
+    .full .col { display: block; color: var(--ink-2); }
+    .full tr > :nth-child(2) { border-radius: 10px; }
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+import Eyebrow from "./Eyebrow.astro";
+import Portrait from "./Portrait.astro";
+---
+
+<section class="section night">
+  <div class="container-x grid-12">
+    <div class="who"><Portrait /></div>
+    <div class="note">
+      <Eyebrow>Who you’ll work with</Eyebrow>
+      <h2>One person. <em>Start to finish.</em></h2>
+      <p class="body">I’m Pep Dekker. For 18 years I built lead generation and marketing systems for small businesses. Now I install Claude inside freight offices. I’m not a freight veteran, so I start every engagement by watching your reps work and measuring what actually eats their day. You work with me directly, from the first call to handover.</p>
+      <a class="link link-block more" href="/about/">About →</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .body { margin-top: 28px; max-width: 60ch; }
+  .more { margin-top: 24px; }
+  @media (min-width: 900px) {
+    .who { grid-column: 1 / span 4; }
+    .note { grid-column: 6 / span 7; align-self: center; }
+  }
+</style>

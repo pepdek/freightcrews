@@ -1,0 +1,36 @@
+---
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import Card from "./Card.astro";
+import Tag from "./Tag.astro";
+
+interface Props {
+  name: string;
+  oneliner: string;
+  replaces: string;
+  href: string;
+  level?: "h2" | "h3";
+}
+const { name, oneliner, replaces, href, level: Heading = "h3" } = Astro.props;
+---
+
+<Card as="li" class="agent card-link">
+  <Heading class="name"><a href={href}>{name}</a></Heading>
+  <p class="small">{oneliner}</p>
+  <div class="bottom">
+    <Tag>{replaces}</Tag>
+    <ArrowRight size={20} stroke-width={1.5} aria-hidden="true" />
+  </div>
+</Card>
+
+<style>
+  :global(.agent) { position: relative; display: flex; flex-direction: column; max-width: none; }
+  .name { font-family: var(--font-sans); font-size: 1.25rem; font-weight: 600; line-height: 1.3; letter-spacing: 0; }
+  a { text-decoration: none; }
+  /* The whole card is the hit area; the focus ring follows it. */
+  a::after { content: ""; position: absolute; inset: 0; border-radius: 10px; }
+  a:focus-visible { outline: none; }
+  a:focus-visible::after { outline: 2px solid var(--signal); outline-offset: 2px; }
+  p { margin-top: 12px; color: var(--ink-2); }
+  .bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-top: auto; padding-top: 28px; }
+  .bottom :global(svg) { flex: none; }
+</style>
