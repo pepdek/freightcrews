@@ -1,0 +1,20 @@
+behaviour: 18/18 checks passed
+
+PASS  reduced motion: nothing animates on any page: 22 pages, 0 animations, 0 transitions
+PASS  reduced motion: widget shows its final state at once, no Replay
+PASS  hero route draws once over 1.6s
+PASS  widget: waits, counts up row by row on scroll, replays
+PASS  marquee: 40s loop, pauses on hover, hidden from assistive tech
+PASS  FAQ opens from the keyboard
+PASS  scroll reveal: below-the-fold sections appear once scrolled to
+PASS  mega menu: opens on keyboard focus and click, closes on Escape and outside click
+PASS  mobile sheet: full screen, button pinned at the bottom, page inert behind it
+PASS  forms: inline errors, focus on the first one, cleared on typing
+PASS  list form carries the business type to /thanks/ and its list link
+PASS  no JS: all content visible on every page
+PASS  no JS: mega menu opens
+PASS  no JS: mobile menu opens and navigates
+PASS  no JS: teardown form submits every field and shows its message
+PASS  no JS: list form submits and shows the list message
+PASS  print: niche pages print as a short list: freight-brokers 2p, freight-agents 1p, drayage 1p
+PASS  home transfers under 250 KB, excluding fonts: 16.9 KB in 4 requests (gzip), plus 111.5 KB in 4 font files

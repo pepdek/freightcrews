@@ -21,5 +21,9 @@ const steps = [
   li { border-top: 1px solid var(--ink); padding-top: 20px; }
   .mono { display: block; color: var(--signal-ink); margin-bottom: 28px; }
   p { margin-top: 12px; color: var(--ink-2); }
+  @media (min-width: 560px) and (max-width: 839px) {
+    li { display: grid; grid-template-columns: 56px minmax(0, 1fr); align-items: baseline; }
+    .mono { grid-row: span 2; margin: 0; }
+  }
   @media (min-width: 840px) { .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 </style>

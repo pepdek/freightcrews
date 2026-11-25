@@ -7,9 +7,11 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/slop-check.ts && node scripts/link-check.ts",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "gates": "node scripts/gates.ts",
+    "og": "node scripts/og.ts"
   },
   "dependencies": {
     "@astrojs/sitemap": "~3.6.0",
@@ -26,6 +28,7 @@
     "@astrojs/check": "^0.9.12",
     "@axe-core/playwright": "^4.14.1",
     "@types/node": "^24.19.4",
+    "chrome-launcher": "^1.2.3",
     "lighthouse": "^13.6.0",
     "playwright": "^1.65.1",
     "typescript": "^5.9.3"

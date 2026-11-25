@@ -14,12 +14,12 @@ const { name, oneliner, replaces, href, level: Heading = "h3" } = Astro.props;
 ---
 
 <Card as="li" class="agent card-link">
-  <Heading class="name"><a href={href}>{name}</a></Heading>
-  <p class="small">{oneliner}</p>
-  <div class="bottom">
-    <Tag>{replaces}</Tag>
+  <div class="top">
+    <Heading class="name"><a href={href}>{name}</a></Heading>
     <ArrowRight size={20} stroke-width={1.5} aria-hidden="true" />
   </div>
+  <p class="small">{oneliner}</p>
+  <div class="bottom"><Tag>{replaces}</Tag></div>
 </Card>
 
 <style>
@@ -31,6 +31,10 @@ const { name, oneliner, replaces, href, level: Heading = "h3" } = Astro.props;
   a:focus-visible { outline: none; }
   a:focus-visible::after { outline: 2px solid var(--signal); outline-offset: 2px; }
   p { margin-top: 12px; color: var(--ink-2); }
-  .bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-top: auto; padding-top: 28px; }
-  .bottom :global(svg) { flex: none; }
+  .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .top :global(svg) { flex: none; margin-top: 3px; }
+  .bottom { margin-top: auto; padding-top: 24px; }
+  /* Tight enough that the longest "Replaces" line stays on one row in a three-up card. */
+  :global(.agent.card) { padding: 24px; }
+  .bottom :global(.tag) { padding-inline: 8px; letter-spacing: -0.02em; }
 </style>

@@ -17,7 +17,7 @@ const agents = only ? only.map((id) => all.find((a) => a.id === id)!) : all;
 
 <style>
   .agent-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  @media (min-width: 640px) {
+  @media (min-width: 820px) {
     .agent-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .agent-grid:not(.pair) > :global(:last-child) { grid-column: span 2; }
   }

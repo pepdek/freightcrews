@@ -82,7 +82,7 @@
   .link:hover { text-decoration-thickness: 2px; }
   .night .link { color: var(--night-ink); }
   /* Standalone links get a 24px+ tap target. */
-  .link-block { display: inline-block; padding-block: 4px; font-size: 0.9375rem; }
+  .link-block { display: inline-block; padding-block: 4px; }
 
   .btn {
     position: relative; overflow: hidden; isolation: isolate;

@@ -13,7 +13,7 @@ const { value, unit, caption, label } = Astro.props;
 
 <Card class="metric">
   {label && <Tag>{label}</Tag>}
-  <p class="figure"><span class="numeral">{value}</span>{unit && <span class="unit">{unit}</span>}</p>
+  <p class="figure"><span class="numeral">{value}</span>{unit && <span class:list={["unit", { tight: unit.startsWith("/") }]}>{unit}</span>}</p>
   <p class="small muted">{caption}</p>
 </Card>
 
@@ -21,4 +21,5 @@ const { value, unit, caption, label } = Astro.props;
   .figure { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.4ch; margin: 16px 0 8px; }
   .numeral { font-family: var(--font-serif); font-size: 3.5rem; line-height: 1; }
   .unit { font-size: 0.9375rem; }
+  .tight { margin-left: -0.3ch; }
 </style>

@@ -1,0 +1,25 @@
+slop-check: 22 pages, 23 banned terms + emoji, 0 hits
+
+  checked: unlock\w*
+  checked: supercharg\w*
+  checked: revolutioni[sz]\w*
+  checked: seamless(ly)?
+  checked: cutting[- ]edge
+  checked: game[- ]?chang\w*
+  checked: leverag(e|es|ed|ing)
+  checked: harness\w*
+  checked: empower\w*
+  checked: synerg\w*
+  checked: next[- ]level
+  checked: delv(e|es|ed|ing)
+  checked: elevat(e|es|ed|ing)
+  checked: robust\w*
+  checked: in today[’'‘]s fast[- ]paced world
+  checked: AI[- ]powered
+  checked: transform your business
+  checked: lorem
+  checked: TBD
+  checked: XYZ
+  checked: placeholder
+  checked: coming soon
+  checked: example\.com

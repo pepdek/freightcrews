@@ -30,7 +30,7 @@ const Heading = compact ? "h3" : "h2";
 <style>
   .offers { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
   :global(.offer) { display: flex; flex-direction: column; max-width: none; }
-  .name { font-family: var(--font-sans); font-size: 1.25rem; font-weight: 600; line-height: 1.3; letter-spacing: 0; }
+  .name { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; line-height: 1.4; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
   .price { font-size: 2rem; font-weight: 500; line-height: 1.2; letter-spacing: -0.02em; margin: 12px 0 20px; font-variant-numeric: tabular-nums; }
   .features { border-top: 1px solid var(--line); padding-top: 12px; }
   .features li { display: flex; gap: 10px; padding-block: 6px; font-size: 0.9375rem; line-height: 1.5; }
@@ -38,6 +38,7 @@ const Heading = compact ? "h3" : "h2";
   .offers :global(.cta) { margin-top: auto; }
   .features { margin-bottom: 24px; }
   .compact .features { margin-bottom: 0; }
+  .compact .price { margin-bottom: 16px; }
   @media (min-width: 640px) { .offers { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 1040px) {
     .offers { grid-template-columns: repeat(4, minmax(0, 1fr)); }

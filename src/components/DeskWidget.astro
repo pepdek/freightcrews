@@ -87,18 +87,21 @@ const total = tasks.reduce((sum, t) => sum + t.hours, 0).toFixed(1);
 <style>
   .head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
   .head :global(.eyebrow) { margin: 0; }
-  .counter { font-family: var(--font-mono); font-weight: 500; font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
-  li { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "task status" "hours status"; align-items: center; column-gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); max-width: none; }
+  .counter { font-family: var(--font-mono); font-weight: 500; font-size: 1.25rem; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  li { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "task task" "hours status"; align-items: center; column-gap: 16px; row-gap: 6px; padding: 14px 0; border-bottom: 1px solid var(--line); max-width: none; }
   .task { grid-area: task; font-size: 0.9375rem; line-height: 1.45; }
   .hours { grid-area: hours; color: var(--ink-2); }
   .status { grid-area: status; justify-self: end; min-width: 88px; justify-content: center; background: var(--paper); }
   .dot { width: 6px; height: 6px; border-radius: 999px; border: 1px solid var(--ink-2); }
   .done .status { color: var(--ink); }
   .done .dot { background: var(--signal); border-color: var(--signal); }
-  .foot { display: flex; justify-content: flex-end; min-height: 40px; margin-top: 20px; }
+  .foot { display: flex; justify-content: flex-end; margin-top: 20px; }
+  /* No button without JS or with reduced motion, so no gap either. */
+  .foot:has([hidden]) { display: none; }
   .foot :global(.btn) { min-height: 40px; }
-  .foot :global([hidden]) { display: none; }
   .caption { margin-top: 16px; }
+  li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .desk:has([data-replay]:not([hidden])) li:last-child { border-bottom: 1px solid var(--line); padding-bottom: 14px; }
   @media (min-width: 560px) {
     li { grid-template-columns: minmax(0, 1fr) 72px 96px; grid-template-areas: "task hours status"; }
     .hours { justify-self: end; }

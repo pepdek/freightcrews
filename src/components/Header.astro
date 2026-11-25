@@ -107,6 +107,10 @@ const current = (href: string) => (path === href ? "page" : undefined);
   .sheet-cta :global(.btn) { width: 100%; }
   :global(body:has(details[data-mobile-nav][open])) { overflow: hidden; }
 
+  @media (min-width: 768px) {
+    .sheet-scroll, .sheet-cta { padding-inline: 40px; }
+    .mobile summary { margin-right: -12px; }
+  }
   @media (min-width: 900px) {
     .mobile { display: none; }
     .desktop { display: flex; align-items: center; gap: 32px; }
