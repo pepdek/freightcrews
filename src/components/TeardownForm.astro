@@ -3,6 +3,11 @@ import Button from "./Button.astro";
 import Field from "./Field.astro";
 import Honeypot from "./Honeypot.astro";
 
+interface Props {
+  role?: string;
+  business?: string;
+}
+const { role, business } = Astro.props;
 const options = (...labels: string[]) => labels.map((label) => ({ value: label, label }));
 ---
 
@@ -10,10 +15,10 @@ const options = (...labels: string[]) => labels.map((label) => ({ value: label, 
   <Honeypot form="teardown" />
   <Field name="name" label="Name" required autocomplete="name" />
   <Field name="company" label="Company" required autocomplete="organization" />
-  <Field name="role" label="Role" type="select" options={options("Owner", "Operations", "Sales", "Billing", "Other")} />
+  <Field name="role" label="Role" type="select" value={role} options={options("Owner", "Operations", "Sales", "Billing", "Other")} />
   <Field name="email" label="Email" type="email" required autocomplete="email" />
   <Field name="phone" label="Phone" type="tel" autocomplete="tel" />
-  <Field name="business-type" label="Business type" type="select" required options={options("Freight broker", "Freight agent", "Drayage", "Forwarder", "3PL", "Other")} />
+  <Field name="business-type" label="Business type" type="select" required value={business} options={options("Freight broker", "Freight agent", "Drayage", "Forwarder", "3PL", "Other")} />
   <Field name="team-size" label="Team size" type="select" options={options("1–5", "6–15", "16–50", "50+")} />
   <Field name="system" label="TMS or main system" />
   <Field name="time-sink" label="What eats the most time on your desk?" type="textarea" wide />

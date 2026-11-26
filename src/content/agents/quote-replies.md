@@ -6,7 +6,7 @@ h1: "Quote replies,"
 h1_italic: "drafted before you sit down."
 meta: "A Claude agent that reads incoming quote requests, pulls lane details, and drafts replies for your reps to approve."
 oneliner: "Reads every quote request, pulls the lane details, and drafts a reply in your voice. Your rep adds the rate and sends."
-replaces: "Replaces: ~1.5 hrs/day of quote emails"
+frees: "Frees up: ~1.5 hrs/day of quote emails"
 job:
   - "Open the request and find origin, destination, dates, equipment, weight."
   - "Check what’s missing."

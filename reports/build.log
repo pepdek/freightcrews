@@ -4,15 +4,15 @@
 
 [content] Syncing content
 [content] Synced content
-[types] Generated 186ms
+[types] Generated 200ms
 [build] output: "static"
 [build] mode: "static"
 [build] directory: ./dist/
 [build] Collecting build info...
-[build] ✓ Completed in 197ms.
+[build] ✓ Completed in 216ms.
 [build] Building static entrypoints...
-[vite] ✓ built in 758ms
-[build] ✓ Completed in 781ms.
+[vite] ✓ built in 836ms
+[build] ✓ Completed in 858ms.
 
  building client (vite) 
 [vite] transforming...
@@ -22,32 +22,32 @@
 
  generating static routes 
 ▶ src/pages/404.astro
-  └─ /404.html (+10ms) 
+  └─ /404.html (+22ms) 
 ▶ src/pages/50-jobs.astro
-  └─ /50-jobs/index.html (+2ms) 
+  └─ /50-jobs/index.html (+3ms) 
 ▶ src/pages/[proof].astro
 ▶ src/pages/about.astro
-  └─ /about/index.html (+2ms) 
+  └─ /about/index.html (+3ms) 
 ▶ src/pages/agents/[slug].astro
-  ├─ /agents/carrier-packet-review/index.html (+5ms) 
-  ├─ /agents/pod-invoice-matching/index.html (+2ms) 
-  ├─ /agents/rate-con-intake/index.html (+2ms) 
-  ├─ /agents/quote-replies/index.html (+2ms) 
-  └─ /agents/tracking-emails/index.html (+2ms) 
+  ├─ /agents/carrier-packet-review/index.html (+4ms) 
+  ├─ /agents/rate-con-intake/index.html (+3ms) 
+  ├─ /agents/pod-invoice-matching/index.html (+3ms) 
+  ├─ /agents/quote-replies/index.html (+3ms) 
+  └─ /agents/tracking-emails/index.html (+3ms) 
 ▶ src/pages/agents/index.astro
   └─ /agents/index.html (+2ms) 
 ▶ src/pages/claude-use-cases/[slug].astro
-  ├─ /claude-use-cases/drayage/index.html (+2ms) 
-  ├─ /claude-use-cases/freight-agents/index.html (+1ms) 
-  └─ /claude-use-cases/freight-brokers/index.html (+1ms) 
+  ├─ /claude-use-cases/drayage/index.html (+5ms) 
+  ├─ /claude-use-cases/freight-brokers/index.html (+3ms) 
+  └─ /claude-use-cases/freight-agents/index.html (+2ms) 
 ▶ src/pages/claude-use-cases/index.astro
   └─ /claude-use-cases/index.html (+2ms) 
 ▶ src/pages/compare.astro
-  └─ /compare/index.html (+1ms) 
+  └─ /compare/index.html (+2ms) 
 ▶ src/pages/how-it-works.astro
   └─ /how-it-works/index.html (+2ms) 
 ▶ src/pages/index.astro
-  └─ /index.html (+3ms) 
+  └─ /index.html (+4ms) 
 ▶ src/pages/pricing.astro
   └─ /pricing/index.html (+2ms) 
 ▶ src/pages/privacy.astro
@@ -57,13 +57,27 @@
 ▶ src/pages/teardown.astro
   └─ /teardown/index.html (+2ms) 
 ▶ src/pages/terms.astro
-  └─ /terms/index.html (+1ms) 
+  └─ /terms/index.html (+2ms) 
 ▶ src/pages/thanks.astro
-  └─ /thanks/index.html (+1ms) 
-✓ Completed in 71ms.
+  └─ /thanks/index.html (+2ms) 
+▶ src/pages/who-we-help/[slug].astro
+  ├─ /who-we-help/billing-specialists/index.html (+6ms) 
+  ├─ /who-we-help/compliance-coordinators/index.html (+3ms) 
+  ├─ /who-we-help/brokerage-owners/index.html (+3ms) 
+  ├─ /who-we-help/carrier-sales-reps/index.html (+3ms) 
+  ├─ /who-we-help/drayage-customer-service/index.html (+2ms) 
+  ├─ /who-we-help/drayage-billing-specialists/index.html (+2ms) 
+  ├─ /who-we-help/drayage-dispatchers/index.html (+2ms) 
+  ├─ /who-we-help/independent-freight-agents/index.html (+2ms) 
+  ├─ /who-we-help/freight-agent-assistants/index.html (+3ms) 
+  ├─ /who-we-help/operations-coordinators/index.html (+2ms) 
+  └─ /who-we-help/shipper-sales-reps/index.html (+5ms) 
+▶ src/pages/who-we-help/index.astro
+  └─ /who-we-help/index.html (+3ms) 
+✓ Completed in 137ms.
 
 [@astrojs/sitemap] `sitemap-index.xml` created at `dist`
-[build] 22 page(s) built in 1.08s
+[build] 34 page(s) built in 1.25s
 [build] Complete!
-slop-check: 22 pages, 23 banned terms + emoji, 0 hits
-link-check: 22 pages, 1187 internal links, 0 errors
+slop-check: 34 pages, 23 banned terms + emoji, 377 role sentences compared, 0 hits
+link-check: 34 pages, 2898 internal links, 0 errors

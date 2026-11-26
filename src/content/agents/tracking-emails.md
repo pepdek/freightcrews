@@ -6,7 +6,7 @@ h1: "Status updates,"
 h1_italic: "without the chasing."
 meta: "A Claude agent that drafts check-call emails to carriers and status updates to shippers from your load board."
 oneliner: "Drafts the check-call emails to carriers and the status updates to shippers, on schedule, for every active load."
-replaces: "Replaces: ~1 hr/day of check-call emails"
+frees: "Frees up: ~1 hr/day of check-call emails"
 job:
   - "Scan active loads."
   - "Email each carrier for an update."

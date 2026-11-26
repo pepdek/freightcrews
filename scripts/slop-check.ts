@@ -1,7 +1,8 @@
 // Gate 4: banned words (brief §2.4 and §11.4) and emoji in the built HTML. Any hit fails the build.
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { pages, report } from "./shared.ts";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { ROOT, pages, report } from "./shared.ts";
 
 const BANNED = [
   "unlock\\w*", "supercharg\\w*", "revolutioni[sz]\\w*", "seamless(ly)?", "cutting[- ]edge", "game[- ]?chang\\w*",
@@ -26,7 +27,20 @@ const hits = all.flatMap(({ file, path }) =>
     (m) => `${path}: "${m[0]}" … ${m.input.slice(Math.max(0, m.index - 60), m.index + 60).replace(/\s+/g, " ")}`,
   ),
 );
-const summary = `slop-check: ${all.length} pages, ${BANNED.length} banned terms + emoji, ${hits.length} hits`;
+// Every "Who we help" page must be its own: no sentence may appear in two role files.
+const roleDir = join(ROOT, "src/content/roles");
+const owner = new Map<string, string>();
+for (const file of readdirSync(roleDir)) {
+  const strings = readFileSync(join(roleDir, file), "utf8").matchAll(/"([^"]{40,})"/g);
+  for (const [, text] of strings)
+    for (const sentence of text!.split(/(?<=[.?!])\s+/).filter((s) => s.length >= 40)) {
+      const first = owner.get(sentence.toLowerCase());
+      if (first && first !== file) hits.push(`duplicate copy in ${first} and ${file}: "${sentence}"`);
+      owner.set(sentence.toLowerCase(), file);
+    }
+}
+
+const summary = `slop-check: ${all.length} pages, ${BANNED.length} banned terms + emoji, ${owner.size} role sentences compared, ${hits.length} hits`;
 report("slop-check.txt", [summary, "", ...BANNED.map((b) => `  checked: ${b}`), "", ...hits].join("\n"));
 console.log(summary);
 if (hits.length) {

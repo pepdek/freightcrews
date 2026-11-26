@@ -1,10 +1,10 @@
-// Gate 2: Lighthouse (mobile) on home, pricing and one agent page. Median of three runs per page.
+// Gate 2: Lighthouse (mobile) on home, pricing, one agent page and one role page. Median of three runs per page.
 // Set SITE_URL to measure a deployed site instead of dist/; its reports get a -live suffix.
 import * as chromeLauncher from "chrome-launcher";
 import lighthouse from "lighthouse";
 import { report, serve } from "./shared.ts";
 
-const targets = { home: "/", pricing: "/pricing/", agent: "/agents/quote-replies/" };
+const targets = { home: "/", pricing: "/pricing/", agent: "/agents/quote-replies/", role: "/who-we-help/carrier-sales-reps/" };
 const minimum = { performance: 95, accessibility: 100, "best-practices": 100, seo: 100 };
 const keys = Object.keys(minimum) as (keyof typeof minimum)[];
 

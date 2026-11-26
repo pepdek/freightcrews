@@ -5,6 +5,7 @@ import Card from "../../components/Card.astro";
 import CTABand from "../../components/CTABand.astro";
 import LeadMagnet from "../../components/LeadMagnet.astro";
 import { breadcrumbSchema } from "../../lib";
+import { roleLinks } from "../../content";
 
 export async function getStaticPaths() {
   return (await getCollection("niches")).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
@@ -19,6 +20,8 @@ const groups = n.groups.map((g) => {
   return { ...g, start };
 });
 const total = next - 1;
+const roles = (await roleLinks()).filter((r) => r.business.id === entry.id);
+const roleFor = (group: string) => roles.find((r) => r.jobs_from.includes(group));
 ---
 
 <Base
@@ -38,7 +41,10 @@ const total = next - 1;
     <div class="container-x">
       {groups.map((g) => (
         <div class="group grid-12">
-          <h2 class="h2-sm">{g.role}</h2>
+          <div class="who">
+            <h2 class="h2-sm">{g.role}</h2>
+            {roleFor(g.role) && <a class="link link-block small no-print" href={roleFor(g.role)!.href}>For {roleFor(g.role)!.plural} →</a>}
+          </div>
           <ol start={g.start}>
             {g.jobs.map((job) => (
               <li>{typeof job === "string" ? job : <a class="link" href={`/agents/${job.agent.id}/`}>{job.text}</a>}</li>
@@ -75,7 +81,7 @@ const total = next - 1;
   .stays p { margin-top: 12px; }
   .print-only { display: none; }
   @media (min-width: 900px) {
-    h2 { grid-column: 1 / span 5; }
+    .who { grid-column: 1 / span 5; }
     ol { grid-column: 6 / span 7; }
     .stays :global(.box) { grid-column: 6 / span 7; }
   }

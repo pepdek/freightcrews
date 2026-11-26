@@ -1,8 +1,8 @@
 [content] Syncing content
 [content] Synced content
-[types] Generated 183ms
+[types] Generated 312ms
 [check] Getting diagnostics for Astro files in ....
-Result (65 files): 
+Result (67 files): 
 - 0 errors
 - 0 warnings
 - 0 hints

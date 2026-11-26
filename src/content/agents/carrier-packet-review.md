@@ -6,7 +6,7 @@ h1: "Carrier packets,"
 h1_italic: "checked before you book."
 meta: "A Claude agent that reviews new carrier packets and flags mismatches in authority, insurance and contact details for your team."
 oneliner: "Reviews each new carrier packet and flags anything that doesn’t match: names, MC/DOT numbers, insurance dates, contact details."
-replaces: "Replaces: ~20 min per new carrier"
+frees: "Frees up: ~20 min per new carrier"
 job:
   - "Open the packet."
   - "Compare the W-9, insurance certificate and authority details."

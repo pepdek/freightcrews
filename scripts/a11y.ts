@@ -34,8 +34,11 @@ for (const [label, viewport] of [["390", { width: 390, height: 844 }], ["1440", 
     }
   }
   await page.goto(server.url + "/", { waitUntil: "networkidle" });
-  await page.locator(label === "390" ? "[data-mobile-nav] > summary" : "[data-mega] > summary").click();
-  await check(page, `/ @${label} menu open`);
+  if (label === "390") await page.locator("[data-mobile-nav] > summary").click();
+  for (const summary of await page.locator(label === "390" ? ".sheet details > summary" : "[data-mega] > summary").all()) {
+    await summary.click();
+    await check(page, `/ @${label} menu open: ${await summary.innerText()}`);
+  }
   await context.close();
 }
 

@@ -108,19 +108,23 @@ await test("scroll reveal: below-the-fold sections appear once scrolled to", {},
 });
 await test("mega menu: opens on keyboard focus and click, closes on Escape and outside click", {}, async (page) => {
   await go(page, "/");
-  const menu = page.locator("[data-mega]");
+  const menu = page.locator('[data-mega="Who we help"]');
   const isOpen = () => menu.evaluate((el: HTMLDetailsElement) => el.open);
   await page.locator(".desktop > a").first().focus();
   await page.keyboard.press("Tab");
   assert.equal(await isOpen(), true, "focus");
   await page.keyboard.press("Tab");
-  assert.equal(await page.evaluate(() => document.activeElement?.textContent), "Freight brokers");
+  assert.equal(await page.evaluate(() => document.activeElement?.textContent), "Brokerage owner");
   await page.keyboard.press("Escape");
   assert.equal(await isOpen(), false, "escape");
   await menu.locator("summary").click();
   assert.equal(await isOpen(), true, "click");
-  await page.mouse.click(20, 600);
-  assert.equal(await isOpen(), false, "outside click");
+  await menu.locator("summary").click();
+  await menu.locator("summary").click();
+  await page.locator('[data-mega="Agents"] > summary').click();
+  assert.equal(await isOpen(), false, "only one menu open");
+  await page.mouse.click(20, 700);
+  assert.equal(await page.locator("[data-mega][open]").count(), 0, "outside click");
 });
 await test("mobile sheet: full screen, button pinned at the bottom, page inert behind it", { viewport: mobile }, async (page) => {
   await go(page, "/");
@@ -130,6 +134,11 @@ await test("mobile sheet: full screen, button pinned at the bottom, page inert b
   const cta = (await page.locator(".sheet-cta .btn").boundingBox())!;
   assert.ok(cta.y + cta.height <= 844 && cta.y > 740, `button at ${cta.y}`);
   assert.equal(await page.locator("main").getAttribute("inert"), "");
+  for (const group of await page.locator(".sheet details > summary").all()) {
+    const box = (await group.boundingBox())!;
+    assert.ok(box.width > 300 && box.height < 60, `group row is ${box.width}x${box.height}`);
+    await group.click();
+  }
   await page.keyboard.press("Escape");
   assert.equal(await page.locator(".sheet").isVisible(), false);
 });
@@ -170,9 +179,9 @@ await test("no JS: all content visible on every page", noJs, async (page) => {
 });
 await test("no JS: mega menu opens", noJs, async (page) => {
   await go(page, "/");
-  await page.locator("[data-mega] > summary").click();
-  await page.locator("[data-mega]").getByRole("link", { name: "Drayage" }).click();
-  assert.equal(new URL(page.url()).pathname, "/claude-use-cases/drayage/");
+  await page.locator('[data-mega="Who we help"] > summary').click();
+  await page.getByRole("link", { name: "Drayage dispatcher" }).first().click();
+  assert.equal(new URL(page.url()).pathname, "/who-we-help/drayage-dispatchers/");
 });
 await test("no JS: mobile menu opens and navigates", { ...noJs, viewport: mobile }, async (page) => {
   await go(page, "/");
@@ -203,6 +212,16 @@ await test("no JS: list form submits and shows the list message", noJs, async (p
   await page.waitForLoadState();
   assert.equal(await page.getByRole("heading", { level: 1 }).innerText(), "Your list is\nready.");
   assert.equal(await page.getByRole("link", { name: "Open the list" }).isVisible(), true);
+});
+
+await test("role page: contents links reach their sections, form arrives pre-filled", {}, async (page) => {
+  await go(page, "/who-we-help/carrier-sales-reps/");
+  assert.equal(await page.locator("#f-role").inputValue(), "Sales");
+  assert.equal(await page.locator("#f-business-type").inputValue(), "Freight broker");
+  for (const link of await page.locator(".toc a").all()) assert.equal(await page.locator((await link.getAttribute("href"))!).count(), 1);
+  await page.locator('.toc a[href="#stays"]').click();
+  await page.waitForTimeout(700);
+  assert.ok(Math.abs((await page.locator("#stays").boundingBox())!.y - 88) < 4);
 });
 
 /* ---------- Print: the niche page is "the list" ---------- */

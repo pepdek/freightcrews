@@ -6,7 +6,7 @@ h1: "Rate cons,"
 h1_italic: "keyed once."
 meta: "A Claude agent that reads rate confirmations and load tenders and prepares the load entry for your TMS."
 oneliner: "Reads tenders and rate cons from email and PDFs, pulls every field, and lines it up for your TMS. Your rep checks it and saves."
-replaces: "Replaces: ~30 min/day of re-typing"
+frees: "Frees up: ~30 min/day of re-typing"
 job:
   - "Open the PDF."
   - "Find pickup, delivery, times, references, rate, accessorials."

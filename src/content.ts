@@ -16,6 +16,16 @@ export async function nicheLinks() {
   }));
 }
 
+export async function roleLinks() {
+  return byOrder(await getCollection("roles")).map((r) => ({ ...r.data, id: r.id, href: `/who-we-help/${r.id}/` }));
+}
+
+/** Businesses with their job titles, for the menu and the hub. */
+export async function whoWeHelp() {
+  const roles = await roleLinks();
+  return (await nicheLinks()).map((n) => ({ ...n, roles: roles.filter((r) => r.business.id === n.id) }));
+}
+
 /** The one gate for every Proof surface: flag on AND the demo no longer a draft. */
 export async function proofEntry() {
   if (!SITE.DEMO_PUBLISHED) return undefined;

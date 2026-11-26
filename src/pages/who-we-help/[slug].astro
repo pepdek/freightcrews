@@ -1,0 +1,180 @@
+---
+// Pillar page for one job title: hero, short answer, long-form sections beside a sticky contents rail.
+import { getCollection, getEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import AgentCard from "../../components/AgentCard.astro";
+import Button from "../../components/Button.astro";
+import Card from "../../components/Card.astro";
+import CTABand from "../../components/CTABand.astro";
+import Eyebrow from "../../components/Eyebrow.astro";
+import FAQ from "../../components/FAQ.astro";
+import PageHead from "../../components/PageHead.astro";
+import TeardownForm from "../../components/TeardownForm.astro";
+import { faqSchema } from "../../data/faq";
+import { BOOK_HREF, breadcrumbSchema } from "../../lib";
+import { agentLinks, roleLinks } from "../../content";
+
+export async function getStaticPaths() {
+  return (await getCollection("roles")).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const r = entry.data;
+const niche = (await getEntry(r.business))!;
+const path = `/who-we-help/${entry.id}/`;
+const all = await agentLinks();
+const agents = r.agents.map((a) => ({ ...all.find((x) => x.id === a.agent.id)!, why: a.why }));
+const siblings = (await roleLinks()).filter((x) => x.id !== entry.id && x.business.id === r.business.id);
+// Numbering matches the full list for this business.
+let next = 1;
+const groups = niche.data.groups
+  .map((g) => ({ ...g, start: (next += g.jobs.length) - g.jobs.length }))
+  .filter((g) => r.jobs_from.includes(g.role));
+const businessType = { "freight-brokers": "Freight broker", "freight-agents": "Freight agent", drayage: "Drayage" }[niche.id];
+
+const toc = [
+  { id: "today", label: r.today.heading },
+  { id: "shift", label: r.shift.heading },
+  { id: "setup", label: `How I set this up for ${r.plural}` },
+  { id: "agents", label: "Agents for this desk" },
+  { id: "jobs", label: "Jobs Claude can draft or check" },
+  { id: "stays", label: "What stays with you" },
+  { id: "questions", label: "Questions" },
+];
+const heading = (id: string) => toc.find((t) => t.id === id)!.label;
+---
+
+<Base title={r.title} description={r.meta} jsonld={[breadcrumbSchema(["Home", "/"], ["Who we help", "/who-we-help/"], [r.name, path]), faqSchema(r.faq)]}>
+  <PageHead title={r.h1} italic={r.h1_italic} lead={r.lead}>
+    <nav slot="above" class="eyebrow" aria-label="Breadcrumb"><a href="/who-we-help/">Who we help</a><span aria-hidden="true">/</span><span aria-current="page">{r.name}</span></nav>
+    <div class="actions">
+      <Button href={BOOK_HREF}>Book a free teardown</Button>
+      <Button href="/agents/" variant="secondary">See the agents</Button>
+    </div>
+  </PageHead>
+
+  <div class="container-x layout">
+    <article>
+      <section class="answer">
+        <Eyebrow>The short answer</Eyebrow>
+        <p>{r.answer}</p>
+      </section>
+
+      {([["today", r.today], ["shift", r.shift]] as const).map(([id, part]) => (
+        <section id={id}>
+          <h2 class="h2-sm">{part.heading}</h2>
+          {part.text.map((p) => <p class="para">{p}</p>)}
+        </section>
+      ))}
+
+      <section id="setup">
+        <h2 class="h2-sm">{heading("setup")}</h2>
+        <ol class="grid-2">
+          {r.steps.map((s, i) => (
+            <li>
+              <span class="mono num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section id="agents">
+        <h2 class="h2-sm">{heading("agents")}</h2>
+        <ul class="agents">{agents.map((a) => <AgentCard name={a.name} oneliner={a.why} frees={a.frees} href={a.href} />)}</ul>
+      </section>
+
+      <section id="jobs">
+        <h2 class="h2-sm">{heading("jobs")}</h2>
+        {groups.map((g) => (
+          <div class="jobs">
+            {groups.length > 1 && <h3>{g.role}</h3>}
+            <ol start={g.start}>{g.jobs.map((j) => <li>{typeof j === "string" ? j : <a class="link" href={`/agents/${j.agent.id}/`}>{j.text}</a>}</li>)}</ol>
+          </div>
+        ))}
+        <p class="after"><a class="link link-block" href={`/claude-use-cases/${niche.id}/`}>The full list for {niche.data.name.toLowerCase()} →</a></p>
+      </section>
+
+      <section id="stays">
+        <h2 class="h2-sm">{heading("stays")}</h2>
+        <p class="para">I never set up an agent to replace a person. It adds to the role: it drafts and checks, and the person decides.</p>
+        <ul class="grid-2">
+          {r.stays.map((s) => <li><h3>{s.title}</h3><p>{s.text}</p></li>)}
+        </ul>
+      </section>
+
+      <section id="teardown" class="teardown">
+        <h2 class="h2-sm">Show me where the hours go.</h2>
+        <p class="para">20 minutes. No pitch deck. You leave with three written recommendations.</p>
+        <Card><TeardownForm role={r.form_role} business={businessType} /></Card>
+      </section>
+
+      <section id="questions">
+        <h2 class="h2-sm">{heading("questions")}</h2>
+        <FAQ items={r.faq} />
+      </section>
+    </article>
+
+    <aside>
+      <nav class="box toc" aria-labelledby="toc-title">
+        <p class="mono title" id="toc-title">On this page</p>
+        <ol>{toc.map((t) => <li><a href={`#${t.id}`}>{t.label}</a></li>)}</ol>
+      </nav>
+      <nav class="box" aria-labelledby="more-title">
+        <p class="mono title" id="more-title">More in {niche.data.name.toLowerCase()}</p>
+        <ul>
+          {siblings.map((s) => <li><a href={s.href}>{s.name}</a></li>)}
+          <li><a href="/who-we-help/">All the roles we help</a></li>
+        </ul>
+      </nav>
+    </aside>
+  </div>
+
+  <CTABand />
+</Base>
+
+<style>
+  .eyebrow a { text-decoration: none; padding-block: 4px; }
+  .eyebrow a:hover { text-decoration: underline; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; padding-block: clamp(48px, 6vw, 80px) clamp(72px, 8vw, 112px); }
+  article > section { padding-block: 56px; border-top: 1px solid var(--line); }
+  article > section:first-child { border: 0; padding-block: 0; margin-bottom: 56px; }
+  .answer { background: var(--paper-2); border-radius: 10px; }
+  article > section.answer { padding: 28px; }
+  .answer :global(.eyebrow) { margin-bottom: 14px; }
+  h2 { margin-bottom: 24px; }
+  .para + .para { margin-top: 18px; }
+  .grid-2 { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: 32px; }
+  .para + .grid-2 { margin-top: 32px; }
+  .grid-2 li { border-top: 1px solid var(--line); padding-block: 24px; }
+  .grid-2 p { margin-top: 8px; color: var(--ink-2); }
+  .num { display: block; color: var(--signal-ink); margin-bottom: 12px; }
+  .agents { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .jobs + .jobs { margin-top: 28px; }
+  .jobs h3 { margin-bottom: 8px; }
+  .jobs ol { list-style: decimal; padding-left: 2.4em; }
+  .jobs li { padding: 7px 0 7px 8px; }
+  .jobs li::marker { font-family: var(--font-mono); font-weight: 500; font-size: 0.75rem; color: var(--ink-2); }
+  .after { margin-top: 20px; }
+  .teardown :global(.card) { margin-top: 32px; }
+  aside { display: grid; gap: 16px; align-content: start; }
+  .box { border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+  .title { text-transform: uppercase; color: var(--ink-2); margin-bottom: 8px; }
+  .box a { display: block; padding-block: 6px; font-size: 0.9375rem; line-height: 1.4; text-decoration: none; }
+  .box a:hover { text-decoration: underline; text-decoration-color: var(--signal); text-decoration-thickness: 2px; }
+  .toc { display: none; }
+  @media (max-width: 479px) { .actions { flex-direction: column; } }
+  @media (min-width: 640px) {
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .answer p:last-child { font-size: 1.25rem; line-height: 1.55; }
+    .agents { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .agents > :global(:last-child:nth-child(odd)) { grid-column: span 2; }
+  }
+  @media (min-width: 1000px) {
+    .layout { grid-template-columns: minmax(0, 8fr) minmax(0, 3fr); gap: 64px; }
+    .toc { display: block; }
+    aside { position: sticky; top: 88px; align-self: start; }
+  }
+</style>

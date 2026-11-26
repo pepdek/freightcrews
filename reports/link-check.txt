@@ -1,4 +1,4 @@
-link-check: 22 pages, 1187 internal links, 0 errors
+link-check: 34 pages, 2898 internal links, 0 errors
 
 
 External links (not fetched):

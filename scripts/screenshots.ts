@@ -14,6 +14,7 @@ const issues: string[] = [];
 let shots = 0;
 
 for (const width of [390, 768, 1440]) {
+  // (1000px, where the desktop nav starts, is checked separately below.)
   const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 }, reducedMotion: "reduce" });
   const page = await context.newPage();
   for (const { path } of pages()) {
@@ -68,10 +69,27 @@ for (const width of [390, 768, 1440]) {
     shots++;
   }
   await page.goto(server.url + "/", { waitUntil: "networkidle" });
-  await page.locator(width < 900 ? "[data-mobile-nav] > summary" : "[data-mega] > summary").click();
+  await page.locator(width < 1000 ? "[data-mobile-nav] > summary" : '[data-mega="Who we help"] > summary').click();
+  if (width < 1000) await page.locator(".sheet summary").first().click();
   await page.screenshot({ path: join(out, `menu-open-${width}.png`) });
   shots++;
   await context.close();
+}
+
+// The tightest desktop width: the nav must stay on one line with nothing off screen.
+{
+  const page = await browser.newPage({ viewport: { width: 1000, height: 800 } });
+  await page.goto(server.url + "/", { waitUntil: "networkidle" });
+  const bar = await page.evaluate(() => ({
+    overflow: document.documentElement.scrollWidth - innerWidth,
+    right: document.querySelector(".desktop-cta")!.getBoundingClientRect().right,
+    height: document.querySelector(".desktop")!.getBoundingClientRect().height,
+  }));
+  if (bar.overflow > 0 || bar.right > 1000 || bar.height > 48) issues.push(`header at 1000px does not fit: ${JSON.stringify(bar)}`);
+  await page.locator('[data-mega="Who we help"] > summary').click();
+  await page.screenshot({ path: join(out, "menu-open-1000.png") });
+  shots++;
+  await page.close();
 }
 
 await browser.close();

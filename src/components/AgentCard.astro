@@ -6,11 +6,11 @@ import Tag from "./Tag.astro";
 interface Props {
   name: string;
   oneliner: string;
-  replaces: string;
+  frees: string;
   href: string;
   level?: "h2" | "h3";
 }
-const { name, oneliner, replaces, href, level: Heading = "h3" } = Astro.props;
+const { name, oneliner, frees, href, level: Heading = "h3" } = Astro.props;
 ---
 
 <Card as="li" class="agent card-link">
@@ -19,7 +19,7 @@ const { name, oneliner, replaces, href, level: Heading = "h3" } = Astro.props;
     <ArrowRight size={20} stroke-width={1.5} aria-hidden="true" />
   </div>
   <p class="small">{oneliner}</p>
-  <div class="bottom"><Tag>{replaces}</Tag></div>
+  <div class="bottom"><Tag>{frees}</Tag></div>
 </Card>
 
 <style>
@@ -34,7 +34,7 @@ const { name, oneliner, replaces, href, level: Heading = "h3" } = Astro.props;
   .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
   .top :global(svg) { flex: none; margin-top: 3px; }
   .bottom { margin-top: auto; padding-top: 24px; }
-  /* Tight enough that the longest "Replaces" line stays on one row in a three-up card. */
+  /* Tight enough that the longest "Frees up" line stays on one row in a three-up card. */
   :global(.agent.card) { padding: 20px; }
   @media (min-width: 640px) { :global(.agent.card) { padding: 24px; } }
   .bottom :global(.tag) { padding-inline: 8px; letter-spacing: -0.02em; }

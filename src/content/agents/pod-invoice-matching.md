@@ -6,7 +6,7 @@ h1: "PODs matched,"
 h1_italic: "invoices out the same day."
 meta: "A Claude agent that matches delivered loads to PODs and prepares invoices for your billing team to approve."
 oneliner: "Matches each delivered load to its POD, checks the paperwork, and prepares the invoice. Billing approves and sends."
-replaces: "Replaces: ~30 min/day of billing checks"
+frees: "Frees up: ~30 min/day of billing checks"
 job:
   - "Find the POD in email or a portal."
   - "Check signatures, dates and counts."

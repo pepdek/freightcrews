@@ -7,7 +7,7 @@ const agents = await agentLinks();
 const niches = await nicheLinks();
 const columns = [
   { title: "Agents", links: agents.map((a) => ({ label: a.name, href: a.href })) },
-  { title: "Who it’s for", links: niches.map((n) => ({ label: n.name, href: n.href })) },
+  { title: "Who we help", links: [{ label: "All roles", href: "/who-we-help/" }, ...niches.map((n) => ({ label: n.name, href: n.href }))] },
   {
     title: "Company",
     links: [

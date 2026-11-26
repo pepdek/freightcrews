@@ -12,7 +12,7 @@ const agents = only ? only.map((id) => all.find((a) => a.id === id)!) : all;
 ---
 
 <ul class:list={["agent-grid", { pair: agents.length === 2 }]}>
-  {agents.map((a) => <AgentCard name={a.name} oneliner={a.oneliner} replaces={a.replaces} href={a.href} level={level} />)}
+  {agents.map((a) => <AgentCard name={a.name} oneliner={a.oneliner} frees={a.frees} href={a.href} level={level} />)}
 </ul>
 
 <style>

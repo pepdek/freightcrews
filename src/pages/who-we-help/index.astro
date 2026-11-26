@@ -1,0 +1,52 @@
+---
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import Base from "../../layouts/Base.astro";
+import Card from "../../components/Card.astro";
+import CTABand from "../../components/CTABand.astro";
+import PageHead from "../../components/PageHead.astro";
+import Split from "../../components/Split.astro";
+import { whoWeHelp } from "../../content";
+
+const businesses = await whoWeHelp();
+---
+
+<Base title="Who we help — FreightCrews" description="Claude agents for the people in freight brokerages, agencies and drayage: what each role hands off to a draft, and what stays with a person.">
+  <PageHead title="Who we help." italic="The people at the desk." lead="Pick the job that sounds like yours. Each page covers what an agent can draft or check for that role, and what stays with the person doing it." />
+
+  {businesses.map((b, i) => (
+    <Split title={b.name} class={i % 2 ? "section-alt" : undefined}>
+      <ul class="roles">
+        {b.roles.map((r) => (
+          <Card as="li" class="role card-link">
+            <div class="top">
+              <h3><a href={r.href}>{r.name}</a></h3>
+              <ArrowRight size={20} stroke-width={1.5} aria-hidden="true" />
+            </div>
+            <p class="small">{r.lead}</p>
+          </Card>
+        ))}
+      </ul>
+      <p class="section-foot"><a class="link link-block small" href={b.href}>{b.count} jobs Claude can take off a {b.noun} desk →</a></p>
+    </Split>
+  ))}
+
+  <Split title="We add to the role." italic="We don’t replace it." class="section-rule">
+    <p>Agents draft, retype and check. People price, decide, approve and look after the relationship. I am never there to replace anyone, only to give the person in the role more of the day for the part that needs them.</p>
+  </Split>
+
+  <CTABand />
+</Base>
+
+<style>
+  .roles { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  :global(.role) { position: relative; max-width: none; }
+  .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .top :global(svg) { flex: none; }
+  a { text-decoration: none; }
+  a::after { content: ""; position: absolute; inset: 0; border-radius: 10px; }
+  a:focus-visible { outline: none; }
+  a:focus-visible::after { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .roles p { margin-top: 10px; color: var(--ink-2); }
+  .section-foot a { position: static; text-decoration: underline; }
+  .section-foot a::after { content: none; }
+</style>

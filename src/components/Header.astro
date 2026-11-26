@@ -6,11 +6,13 @@ import Button from "./Button.astro";
 import MegaMenu from "./MegaMenu.astro";
 import { SITE } from "../config";
 import { BOOK_HREF } from "../lib";
-import { agentLinks, nicheLinks, proofEntry } from "../content";
+import { agentLinks, proofEntry, whoWeHelp } from "../content";
 
 const proof = await proofEntry();
 const agents = await agentLinks();
-const niches = await nicheLinks();
+const businesses = await whoWeHelp();
+const jobsLabel = (b: (typeof businesses)[number]) => `All ${b.count} ${b.noun} jobs`;
+const whoColumns = businesses.map((b) => ({ title: b.name, links: b.roles, more: { name: jobsLabel(b), href: b.href } }));
 const path = Astro.url.pathname;
 const current = (href: string) => (path === href ? "page" : undefined);
 ---
@@ -22,7 +24,8 @@ const current = (href: string) => (path === href ? "page" : undefined);
 
     <nav class="desktop" aria-label="Main">
       <a href="/how-it-works/" aria-current={current("/how-it-works/")}>How it works</a>
-      <MegaMenu agents={agents} niches={niches} />
+      <MegaMenu label="Who we help" columns={whoColumns} all={{ name: "All the roles we help", href: "/who-we-help/" }} wide />
+      <MegaMenu label="Agents" columns={[{ title: "By job", links: agents }]} all={{ name: "See all agents", href: "/agents/" }} />
       <a href="/pricing/" aria-current={current("/pricing/")}>Pricing</a>
       {proof && <a href="/proof/" aria-current={current("/proof/")}>Proof</a>}
       <a href="/claude-use-cases/" aria-current={current("/claude-use-cases/")}>Learn</a>
@@ -37,14 +40,24 @@ const current = (href: string) => (path === href ? "page" : undefined);
       <nav class="sheet" aria-label="Mobile">
         <div class="sheet-scroll">
           <a class="row" href="/how-it-works/" aria-current={current("/how-it-works/")}>How it works</a>
-          <div class="group">
-            <p class="row">Agents <ChevronDown size={18} stroke-width={1.5} aria-hidden="true" /></p>
-            <p class="mono label">By business</p>
-            <ul>{niches.map((n) => <li><a href={n.href}>{n.name}</a></li>)}</ul>
-            <p class="mono label">By job</p>
+          <details class="group" name="sheet-menu">
+            <summary class="row">Who we help <ChevronDown size={18} stroke-width={1.5} aria-hidden="true" /></summary>
+            {businesses.map((b) => (
+              <>
+                <p class="mono label">{b.name}</p>
+                <ul>
+                  {b.roles.map((r) => <li><a href={r.href}>{r.name}</a></li>)}
+                  <li><a class="link" href={b.href}>{jobsLabel(b)} →</a></li>
+                </ul>
+              </>
+            ))}
+            <a class="link link-block" href="/who-we-help/">All the roles we help →</a>
+          </details>
+          <details class="group" name="sheet-menu">
+            <summary class="row">Agents <ChevronDown size={18} stroke-width={1.5} aria-hidden="true" /></summary>
             <ul>{agents.map((a) => <li><a href={a.href}>{a.name}</a></li>)}</ul>
             <a class="link link-block" href="/agents/">See all agents →</a>
-          </div>
+          </details>
           <a class="row" href="/pricing/" aria-current={current("/pricing/")}>Pricing</a>
           {proof && <a class="row" href="/proof/">Proof</a>}
           <a class="row" href="/claude-use-cases/" aria-current={current("/claude-use-cases/")}>Learn</a>
@@ -71,7 +84,7 @@ const current = (href: string) => (path === href ? "page" : undefined);
     sheet.open = false;
     sheet.querySelector("summary")!.focus();
   });
-  matchMedia("(min-width: 900px)").addEventListener("change", () => (sheet.open = false));
+  matchMedia("(min-width: 1000px)").addEventListener("change", () => (sheet.open = false));
 </script>
 
 <style>
@@ -83,7 +96,7 @@ const current = (href: string) => (path === href ? "page" : undefined);
   .site-header.scrolled { border-bottom-color: var(--line); }
   .site-header.scrolled::before { background: color-mix(in srgb, var(--paper) 85%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   .site-header:has(details[data-mobile-nav][open])::before { background: var(--paper); backdrop-filter: none; -webkit-backdrop-filter: none; }
-  .bar { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 63px; }
+  .bar { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 63px; }
   .wordmark { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 1.0625rem; text-decoration: none; min-height: 44px; }
   .square { width: 10px; height: 10px; background: var(--signal); }
   .desktop { display: none; }
@@ -93,7 +106,7 @@ const current = (href: string) => (path === href ? "page" : undefined);
 
   summary { list-style: none; cursor: pointer; }
   summary::-webkit-details-marker { display: none; }
-  .mobile summary { display: grid; place-items: center; width: 48px; height: 48px; margin-right: -12px; border-radius: 10px; }
+  .mobile > summary { display: grid; place-items: center; width: 48px; height: 48px; margin-right: -12px; border-radius: 10px; }
   .when-open, .mobile[open] .when-closed { display: none; }
   .mobile[open] .when-open { display: block; }
   .sheet { position: fixed; inset: 64px 0 0 0; display: flex; flex-direction: column; background: var(--paper); border-top: 1px solid var(--line); }
@@ -101,6 +114,7 @@ const current = (href: string) => (path === href ? "page" : undefined);
   .row { display: flex; align-items: center; gap: 8px; min-height: 56px; border-bottom: 1px solid var(--line); font-weight: 500; text-decoration: none; }
   .group { border-bottom: 1px solid var(--line); padding-bottom: 12px; }
   .group .row { border: 0; }
+  .group[open] .row :global(svg) { transform: rotate(180deg); }
   .label { text-transform: uppercase; color: var(--ink-2); margin-top: 8px; }
   .group ul a { display: flex; align-items: center; min-height: 44px; text-decoration: none; }
   .sheet-cta { padding: 16px 24px calc(16px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
@@ -109,11 +123,11 @@ const current = (href: string) => (path === href ? "page" : undefined);
 
   @media (min-width: 768px) {
     .sheet-scroll, .sheet-cta { padding-inline: 40px; }
-    .mobile summary { margin-right: -12px; }
   }
-  @media (min-width: 900px) {
+  @media (min-width: 1000px) {
     .mobile { display: none; }
-    .desktop { display: flex; align-items: center; gap: 32px; }
-    .bar :global(.desktop-cta) { display: inline-flex; min-height: 40px; }
+    .desktop { display: flex; align-items: center; gap: 24px; white-space: nowrap; }
+    .bar :global(.desktop-cta) { display: inline-flex; min-height: 40px; white-space: nowrap; }
   }
+  @media (min-width: 1120px) { .desktop { gap: 32px; } }
 </style>

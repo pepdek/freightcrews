@@ -13,7 +13,7 @@ const agents = defineCollection({
     h1_italic: z.string(),
     meta: z.string().max(154),
     oneliner: z.string(),
-    replaces: z.string(),
+    frees: z.string(),
     job: z.array(z.string()).min(1),
     input: z.string(),
     output: z.string(),
@@ -45,6 +45,34 @@ const niches = defineCollection({
   }),
 });
 
+const titled = z.object({ title: z.string(), text: z.string() });
+const prose = z.object({ heading: z.string(), text: z.array(z.string()).min(1) });
+
+/** "Who we help" pillar pages: one per job title. */
+const roles = defineCollection({
+  loader: folder("roles"),
+  schema: z.object({
+    order: z.number(),
+    business: reference("niches"),
+    name: z.string(),
+    plural: z.string(),
+    title: z.string(),
+    meta: z.string().max(154),
+    h1: z.string(),
+    h1_italic: z.string(),
+    lead: z.string(),
+    answer: z.string(),
+    jobs_from: z.array(z.string()).min(1), // group headings in the business's job list
+    form_role: z.enum(["Owner", "Operations", "Sales", "Billing", "Other"]),
+    today: prose,
+    shift: prose,
+    steps: z.array(titled).length(4),
+    agents: z.array(z.object({ agent: reference("agents"), why: z.string() })).min(1),
+    stays: z.array(titled).length(4),
+    faq: z.array(z.object({ q: z.string(), a: z.string() })).min(4),
+  }),
+});
+
 const proof = defineCollection({
   loader: folder("proof"),
   schema: z.object({
@@ -58,4 +86,4 @@ const proof = defineCollection({
   }),
 });
 
-export const collections = { agents, niches, proof };
+export const collections = { agents, niches, roles, proof };

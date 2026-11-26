@@ -1,4 +1,4 @@
-slop-check: 22 pages, 23 banned terms + emoji, 0 hits
+slop-check: 34 pages, 23 banned terms + emoji, 377 role sentences compared, 0 hits
 
   checked: unlock\w*
   checked: supercharg\w*
